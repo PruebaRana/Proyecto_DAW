@@ -13,7 +13,7 @@ class LogonModel
     public function __construct()
     {
         // Obtenemos la única instancia a la BD
-        $this->_db = ConexionBD::singleton();		
+        $this->_db = ConexionBD::GetInstance();		
     }
  
 	public function ComprobarUserPass($asUsuario, $asClave) {

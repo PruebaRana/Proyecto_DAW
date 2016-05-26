@@ -9,14 +9,13 @@ class View
     function __construct()
     {
     }
- 
     public function show($name, $vars = array())
     {
         //$name es el nombre de nuestra plantilla, por ej, listado.php
         //$vars es el contenedor de nuestras variables, es un arreglo del tipo llave => valor, opcional.
 
         //Traemos una instancia de nuestra clase de configuracion.
-        $config = Config::singleton();
+        $config = Config::GetInstance();
  
         // Montamos la ruta a la plantilla
         $path = $config->get('viewsFolder') . $name;

@@ -4,7 +4,7 @@ define("CONTROLADOR_DEFECTO", "Inicio");
 define("ACCION_DEFECTO", "indice");
 
 // Instanciamos la clase config
-$config = Config::singleton();
+$config = Config::GetInstance();
  
 $config->set('controllersFolder', 'controllers/');
 $config->set('modelsFolder', 'models/');

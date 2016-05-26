@@ -1,11 +1,11 @@
 <?php
 /*
  Uso:
- $config = Config::singleton();
+ $config = Config::GetInstance();
  $config->set('nombre', 'Federico');
  echo $config->get('nombre');
  
- $config2 = Config::singleton();
+ $config2 = Config::GetInstance();
  echo $config2->get('nombre');
 */
 class Config
@@ -36,7 +36,7 @@ class Config
         }
     }
  
-    public static function singleton()
+    public static function GetInstance()
     {
         if (!isset(self::$instance)) {
             $c = __CLASS__;
