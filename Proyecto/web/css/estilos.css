@@ -1,108 +1,222 @@
-/* generecos de reset e inicializacion */
-a,abbr,acronym,address,applet,article,aside,audio,b,blockquote,big,body,center,canvas,caption,cite,code,command,datalist,dd,del,details,dfn,dl,div,dt,em,embed,fieldset,figcaption,figure,font,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,keygen,label,legend,li,meter,nav,object,ol,output,p,pre,progress,q,s,samp,section,small,span,source,strike,strong,sub,sup,table,tbody,tfoot,thead,th,tr,tdvideo,tt,u,ul,var{background:transparent;border:0 none;font-size:100%;margin:0;padding:0;border:0;outline:0;vertical-align:top}
-ul{list-style:none}
-blockquote,q{quotes:none}
-table,table td{padding:0;border:none;border-collapse:collapse}
-img{vertical-align:top}
-embed{vertical-align:top}
-article,aside,audio,canvas,command,datalist,details,embed,figcaption,figure,footer,header,hgroup,keygen,meter,nav,output,progress,section,source,video{display:block}
-mark,rp,rt,ruby,summary,time{display:inline}
-UL{padding:0;margin:0}
-LI{list-style-type:none;padding:0 0.4em;;margin:0}
-
-*{-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;border:0; font-family:roboto,arial,sans-serif;}
-html,body{width:100%;height:100%;margin:0 auto;}
-BODY{color:#000;background:#CCC;font-size:100%;font-family:roboto,arial,sans-serif;height:100%;display:block;overflow: auto;}
-/* generecos de reset e inicializacion */
-
-
-/* BASICAS
------------------------------------------------------------*/
-header, footer{display:block;background:#333;min-height:20px;max-height:35px;color:#ccc;overflow: hidden;}
-#cabecera, #pie{max-width:980px;margin:0 auto;padding:0.5% 1%;overflow: auto;}
-section{max-width:980px;margin:0 auto;display:block;background:#fafafa;padding:1% 1%;overflow: auto;}
-#contenido{min-height:90%;}
-
-#menus{float:left;}
-#login{float:right;}
-
-#cabecera a, #pie a, #cabecera a:visited, #pie a:visited, #cabecera a:active, #pie a:active{color:#aaa}
-#menus li.menuactual a{color:#ccc}
-#cabecera a:hover, #pie a:hover, #menus li.menuactual a:hover{color:#eee}
-a{color:#666;text-decoration:none}
-a:visited {color: #666}
-a:active {color: #666}
-a:hover {color: #333}
-
-.izq{float:left}.der{float:right}.Tcen{text-align:center;vertical-align:middle}.Tizq{text-align:left}.Tder{text-align:right}.Tcen{text-align:center}
-.limpiar{clear:both}.oculto{visibility:hidden; display:none;}.visible{visibility:show; display:block;}.border0{border:0}
-H1{color:#555;font-size:1.6em;padding:0 0 .5em;font-family:'roboto';font-weight:300}
-.rojo{color:#c00}.verde{color:#458B00}.blanco{color:#FFF}.oro{color:#FFB90F}.purpura4{color:#551A8B}.purpura3{color:#7D26CD}
-/* BASICAS */
+*{margin:0;padding:0;border:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+HTML{width:100%;height:100%}
+BODY{font-family:Arial;background:#FFFF;font-size:1em;width:100%;height:100%;padding:2em 0 16px 0}
+#pagina{}
+HEADER{position: absolute;top:0;width:100%;height:2em;z-index:1000;font-family:'roboto';padding: 0.3em;}
 
 /* El menu superior */
 nav{display: block;}
 ul{display: inline;}
-ul li {display: inline;}
+ul li {display: inline;padding-left: 1em;}
+
+#cabecera a, #pie a, #cabecera a:visited, #pie a:visited, #cabecera a:active, #pie a:active{color:#aaa}
+#cabecera a:hover, #pie a:hover, #menus li.menuactual a:hover{color:#eee}
+#menus li.menuactual a{color:#ccc}
+#menus{float:left;}
+#login{float:right;}
 /* El menu superior */
 
-/* Para el form de la pagina de login */
-#capalogin { font-size: .9em; line-height: 1em; background-color: #F7F7F7; width: 320px; margin: 1% auto; padding: 1% 2% 2%; border-radius: 2px; box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);}
-#capalogin .icono_user {color: #0074A2; font-size: 9em; margin: 10% 0 6%;}
-#capalogin INPUT[type=text], #capalogin INPUT[type=password] {width: 100%; padding: 1.8% 2%; vertical-align: middle; margin: 0 0 1em; height: 40px; font-size: 1.2em; font-weight: 300; }
-/* Para el form de la pagina de login */
+/* CONTENIDO
+-----------------------------------------------------------*/
+#contenido{width:100%;overflow:auto;height:100%;min-height:300px}
+#Centro{width:100%;height: 100%;}
+.MiContenido{height:100%}
 
-/* Para los forms */
-#capaform {font-size: .9em; line-height: 1em; background-color: #F7F7F7; margin: 1% auto; padding: 1% 2% 2%; border-radius: 2px; box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3); min-width: 400px; max-width: 600px; text-align: left;}
-#capaform INPUT[type=text], #capaform INPUT[type=password], #capaform SELECT {position: relative; display: inline-block; padding: 1.8% 2%; vertical-align: middle; margin: 0 0 1em; height: 40px; font-size: 1.2em; font-weight: 300; }
-#capaform LABEL {position: relative; display: inline-block; padding: 1.8% 1%; vertical-align: middle; margin: 0 0 1em; height: 40px; font-size: 1.2em; font-weight: 300; width: 120px; text-align: right; }
-#capaform TEXTAREA {position: relative; display: inline-block; padding: 1.8% 2%; vertical-align: middle; margin: 0 0 1em; font-size: 1.2em; font-weight: 300; width: 100% }
-/* Para los forms */
+#CapaInicio{width:100%;display:block;max-width:980px;margin:0 auto}
+.bloqueInicio{width:25%;padding:1em;float:left;border-left:1px solid #E6E6E6}
+.numeroInicio{font-size:1.7em;margin:.3em 0;font-family:'rambla';text-shadow:0 1px 1px #FFF;color:#333}
+.descripcionInicio{font-size:.7em}
+#CapaTiempoRestanteDesconexion{ width:40px}
+.paletadecolores td{width:30px !important;display:inline-block;height:10px}
+.espacioentremenus{display:inline-block;width:30px}
 
-/* Para la seccion de mensajes */
-.mensajes span {display: block;}
-.mensajes img { margin: 0 20px 8px 6px; }
-.mensajes span.cabecera { font-weight: 300; margin-bottom: 6px; }
-.mensajes span.fecha {float:right; color:#888; } 
-.mensajes span.asunto { font-size: 1.2em;  clear: right; color:#666; }
-.mensajes span.conversacion {float:left; color:#333; margin-left: 20px; } 
-.mensajes span.responder {float:right; color:#333; } 
-.mensajes p.texto {clear: both; color:#666; padding: 12px 0 0 0;}
-.mensajes DIV.divmensaje {float: left; width: 90%;}
-.mensajes DIV.mensajesconversacion { clear: both; margin: 10px 10px 20px 40px;}
-.mensajes DIV.original { background: #fafaea; overflow: auto; padding: 10px; border-left: 8px solid #ccc; }
 
-hr { clear: both; border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); margin: 20px 80px 20px 0px; }
+/* PIE 
+-----------------------------------------------------------*/
+FOOTER{width:100%;display:block;vertical-align: middle;font-size:.6em;position:relative;height:16px;}
+#pie{color: #F1F1F1}
+#pie A{text-decoration:none;color:#666}
+#pie A:visited{color:#666}
+#pie A:active{color:#8C8C8C}
+#pie A:hover{color:#8C8C8C;cursor:pointer}
 
-/* capa flotante en mensajes para añadir un nuevo mensaje */
-.cajaexterna { background-color: rgba(0, 0, 0, 0.2); bottom: 0; display: none; left: 0; overflow: auto; position: fixed; right: 0; top: 0; z-index: 1000;}
-.cajainterna { background: #fafafa; margin: 6em auto 0; position: relative; width: 80%; max-width: 600px;  box-shadow: 10px 10px 5px #999; border:1px solid #000;}
-.cajacentrada { margin: 0 auto; text-align: center; padding: 1em;}
-.cajacentrada h2 { background: #333; color: #ccc; font-size: 15px; left: 0; padding: 5px; position: absolute; text-align: left; top: 0; width: 100%; }
-.cajacentrada p { margin-top: 30px; }
-/* capa flotante en mensajes para añadir un nuevo mensaje */
-/* Para la seccion de mensajes */
+/* Div respuesta ajax
+-----------------------------------------------------------*/
+#DivRespuesta{max-width:960px; width:90%; margin: 0 auto;}
 
-/* Tabla de la seccion de usuarios */
-.TablaGeneral {margin:0px;padding:0px;width:100%;box-shadow: 10px 10px 5px #888888;border:1px solid #000000;-moz-border-radius-bottomleft:0px;-webkit-border-bottom-left-radius:0px;border-bottom-left-radius:0px;-moz-border-radius-bottomright:0px;-webkit-border-bottom-right-radius:0px;border-bottom-right-radius:0px;-moz-border-radius-topright:0px;-webkit-border-top-right-radius:0px;border-top-right-radius:0px;-moz-border-radius-topleft:0px;-webkit-border-top-left-radius:0px;border-top-left-radius:0px;}
-.TablaGeneral table{border-collapse: collapse;border-spacing: 0;width:100%;height:100%;margin:0px;padding:0px;}
-.TablaGeneral tr:last-child td:last-child {-moz-border-radius-bottomright:0px;-webkit-border-bottom-right-radius:0px;border-bottom-right-radius:0px;}
-.TablaGeneral table tr:first-child td:first-child {-moz-border-radius-topleft:0px;-webkit-border-top-left-radius:0px;border-top-left-radius:0px;}
-.TablaGeneral table tr:first-child td:last-child {-moz-border-radius-topright:0px;-webkit-border-top-right-radius:0px;border-top-right-radius:0px;}
-.TablaGeneral tr:last-child td:first-child{-moz-border-radius-bottomleft:0px;-webkit-border-bottom-left-radius:0px;border-bottom-left-radius:0px;}
-.TablaGeneral tr:hover td{ background-color:#f0f0AA; }
-.TablaGeneral tr:nth-child(odd){ background-color:#e5e5e5; }
-.TablaGeneral tr:nth-child(even){ background-color:#ffffff; }
-.TablaGeneral td{vertical-align:middle;border:1px solid #000000;border-width:0px 1px 1px 0px;text-align:left;padding:7px;font-size:12px;font-family:Arial;font-weight:normal;color:#000000;}
-.TablaGeneral tr:last-child td{border-width:0px 1px 0px 0px;}
-.TablaGeneral tr td:last-child{border-width:0px 0px 1px 0px;}
-.TablaGeneral tr:last-child td:last-child{border-width:0px 0px 0px 0px;}
-.TablaGeneral tr:first-child td{background:-o-linear-gradient(bottom, #cccccc 5%, #b2b2b2 100%);background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #b2b2b2) );background:-moz-linear-gradient( center top, #cccccc 5%, #b2b2b2 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#cccccc", endColorstr="#b2b2b2");background: -o-linear-gradient(top,#cccccc,b2b2b2);background-color:#cccccc;border:0px solid #000000;text-align:center;border-width:0px 0px 1px 1px;font-size:14px;font-family:Arial;font-weight:bold;color:#000000;}
-.TablaGeneral tr:first-child:hover td{background:-o-linear-gradient(bottom, #cccccc 5%, #b2b2b2 100%);background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #b2b2b2) );background:-moz-linear-gradient( center top, #cccccc 5%, #b2b2b2 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#cccccc", endColorstr="#b2b2b2");background: -o-linear-gradient(top,#cccccc,b2b2b2);background-color:#cccccc;}
-.TablaGeneral tr:first-child td:first-child{border-width:0px 0px 1px 0px;}
-.TablaGeneral tr:first-child td:last-child{border-width:0px 0px 1px 1px;}
-.TablaGeneral td.Tcen{text-align:center;vertical-align:middle}
-/* Tabla de la seccion de usuarios */
+/* BASICAS
+-----------------------------------------------------------*/
+.izq{float:left}.der{float:right}.centro{text-align:center;vertical-align:middle}.Tizq{text-align:left}.Tder{text-align:right}.Tcen{text-align:center}
+.limpiar{clear:both}.oculto{visibility:hidden}.visible{visibility:show}.border0{border:0}
+H1{color:#555;font-size:1.6em;padding:0 0 .5em;font-family:'roboto';font-weight:300}
+H2{text-shadow:0 1px 1px #FFF;font-size:1.1em;font-family:'roboto';font-weight:300}
+H3{color:#444;text-shadow:0 1px 1px #FFF;font-size:.9em;font-family:Arial;font-weight:lighter}
+H4{color:#444;text-shadow:0 1px 1px #CCC;font-size:1em;padding:40px 40px 0 0;font-weight:normal}
+H5{color:#333;text-shadow:0 1px 1px #FFF;font-size:0.9em;font-weight:normal;margin:5px 0 0 0}
+HR{border-bottom:1px dotted #ccc;clear:both;width:100%;height:1px;margin:1em auto}
+A{text-decoration:none}
+A:visited{}
+A:active{}
+A:hover{cursor:pointer}
+P{margin:0 0 .5em}
+.t08{font-size:.8em}.t09{font-size:.9em}
+.espacio1em{height:1em;display:block}.espacio2em{height:2em;display:block}.espacio3em{height:3em;display:block}
+.rojo{color:#c00}.verde{color:#458B00}.blanco{color:#FFF}.oro{color:#FFB90F}.purpura4{color:#551A8B}.purpura3{color:#7D26CD}
+.Oculto{ visibility:hidden; display:none; }
+.Visible{ visibility: visible; display:block; }
+
+/*---------------------------------------------------------
+			FORMULARIOS
+-----------------------------------------------------------*/
+input[type=text], input[type=date], input[type=datetime], input[type=tel], input[type=email], input[type=password], textarea {border-width:1px;border-style:solid;padding:.1em .3em;font-weight:lighter;margin:0 .3em 0 0;outline:none;border-radius:0;box-sizing:border-box}
+input[type=text]:hover, input[type=date]:hover, input[type=datetime]:hover, input[type=tel]:hover, input[type=email]:hover, input[type=password]:hover, input[type=checkbox]:hover, textarea:hover {box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3)}
+input[type=text]:focus, input[type=date]:focus, input[type=datetime]:focus, input[type=tel]:focus, input[type=email]:focus, input[type=password]:focus, input[type=checkbox]:focus, textarea:focus {box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3)}
+
+input[type=checkbox]{box-shadow:none}
+input:-moz-placeholder,input::-webkit-input-placeholder, input::-webkit-input-placeholder,input:-moz-placeholder{color:#A9A9A9}
+:focus:empty:before {content: "";}
+
+LABEL{position:relative;display:inline-block;text-align:right;margin:.2em .5em 0 0;width:25%;font-size:12px;font-weight:400}
+INPUT{height:27px}
+SELECT{font-size:0.9em}
+.divinput{margin:.5em 0;width:100%}
+em{display:none !important;height:0;width:0}
+em.error{color:red}
+em.ok{color:green}
+
+INPUT.error, SELECT.error{border:1px solid red;color:red}
+INPUT.valid, SELECT.valid{border:1px solid green;color:green}
+INPUT[type=radio].valid,INPUT[type=radio].error{border:0}
+INPUT[type=checkbox].error{outline:1px solid red; width:13px !important}
+.condicionesdeuso{font-size:.6em;vertical-align:middle;font-family:arial;margin:10px 0}
+.CapaBotonesForm{position:absolute;bottom:1.5em;right:80px;display:block}
+
+
+
+
+
+
+/* EASYUI THEME DEFAULT
+-----------------------------------------------------------*/
+.panel-body-noheader{border:0}
+.panel-body{border:0}
+.panel-header{border-top:0}
+.tab{ padding-top:0}
+.combobox-item-selected-kk{background-color:#FBEC88; color:#fff;}
+.datagrid-toolbar{height:3em;padding:.5em;border-bottom:1px solid #CCC;background:#fff}
+.l-btn-disabled{ opacity: 0.6; filter: alpha(opacity=60); cursor:default}
+.l-btn-disabled:hover{border:1px solid transparent !important;cursor:default}
+.l-btn {-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px}
+
+.datagrid-row, .datagrid-footer-inner{}
+.datagrid-body td{border:0;border-bottom:1px solid #EDEDED !important;padding:0 0 0 1px}
+.datagrid-footer td{border:0;padding:0 0 0 1px}
+/*tabs*/
+.easyui-tabs{width:100%}
+/*buscador*/
+.searchbox{float:right;margin:0 10px 0 0;max-width:350px;width:300px}
+.searchbox-text{}
+
+
+
+
+
+/* Styles for editor and display helpers
+----------------------------------------------------------*/
+.display-label, .display-field, .editor-label, .editor-field { margin: 0.4em 0 0 0;}
+.display-label, .editor-label { font-weight:bold; text-align:right}
+.display-field, .editor-field{ text-align:left}
+.display-field { }
+
+/* Validaciones
+-----------------------------------------------------------*/
+.field-validation-error {color: #ff0000; display:block; }
+.field-validation-valid {display: none; }
+.input-validation-error {border: 1px solid #ff0000; background-color: #ffeeee; }
+.validation-summary-errors {font-weight: bold; color: #ff0000; }
+.validation-summary-valid {display: none; }
+
+/* Botones
+-----------------------------------------------------------*/
+.boton{ text-decoration: none; background: none repeat scroll 0 0 #740E14; color: #FFFFFF !important; border: 0 none; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; padding: 1px 3px 0 3px; cursor: pointer; font: bold 12px/19px Arial,Helvetica,sans-serif; overflow: visible; text-align: center; vertical-align: middle;}
+.boton:hover{ color: #1d60ff; cursor: pointer;}
+.rowExpand{background-color:#6293BB;color:#fff;}
+
+/* Inicio
+-----------------------------------------------------------*/
+
+
+
+
+/*-----------------------------------------------------------
+	Desde aqui es el ValidationEngine.jQuery.css
+	Para los mensajes de validacion de los formularios
+-----------------------------------------------------------*/
+.formError{ position: absolute; top: 300px; left: 300px; padding-bottom: 13px; display: block; z-index: 5000;}
+.ajaxSubmit{ padding: 20px; background: #55ea55; border: 1px solid #999; display: none;}
+
+.formError .formErrorContent{ width: 100%; background: #FFFFCC; color: #000; width: 150px; font-family: tahoma; font-size: 11px; border: 2px solid #CC9933; box-shadow: 0px 0px 6px #000;
+	-moz-box-shadow: 0px 0px 6px #000; -webkit-box-shadow: 0px 0px 6px #000; padding: 4px 10px 4px 10px; border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px;}
+
+.greenPopup .formErrorContent{ background: #33be40;}
+.blackPopup .formErrorContent{ background: #393939; color: #FFF;}
+
+.formError .formErrorArrow{ position: absolute; bottom: 0; left: 20px; width: 15px; height: 15px; z-index: 5001;}
+.formError .formErrorArrowBottom{ top: 0; margin: -6px;}
+.formError .formErrorArrow div{ border-left: 2px solid #CC9933; border-right: 2px solid #CC9933; box-shadow: 0px 2px 3px #444; -moz-box-shadow: 0px 2px 3px #444;
+	-webkit-box-shadow: 0px 2px 3px #444; font-size: 0px; height: 1px; background: #FFFFCC; margin: 0 auto; line-height: 0px; font-size: 0px; display: block;}
+.formError .formErrorArrowBottom div{ box-shadow: none; -moz-box-shadow: none; -webkit-box-shadow: none;}
+
+.greenPopup .formErrorArrow div{ background: #33be40;}
+.blackPopup .formErrorArrow div{ background: #393939; color: #FFF;}
+
+.formError .formErrorArrow .line10{ width: 15px; border: none;}
+.formError .formErrorArrow .line9{ width: 13px; border: none;}
+.formError .formErrorArrow .line8{ width: 11px;}
+.formError .formErrorArrow .line7{ width: 9px;}
+.formError .formErrorArrow .line6{ width: 7px;}
+.formError .formErrorArrow .line5{ width: 5px;}
+.formError .formErrorArrow .line4{ width: 3px;}
+.formError .formErrorArrow .line3{ width: 1px; border-left: 2px solid #ddd; border-right: 2px solid #ddd; border-bottom: 0px solid #ddd;}
+.formError .formErrorArrow .line2{ width: 3px; border: none; background: #ddd;}
+.formError .formErrorArrow .line1{ width: 1px; border: none; background: #ddd;}
+/*---------------------------------------------------------
+Upgrade Browser Prompt
+-----------------------------------------------------------*/
+.chromeframe {font-family: Arial, Helvetica, sans-serif;font-size: .9em;margin: 0.2em 0;background: #eee;color: #000;padding: 0.2em 0;text-align: center;}
+.chromeframe a {color: #00f;}
+.pr{color:#444;display: inline-table;overflow: no-display}
+
+/*---------------------------------------------------------
+			LOGIN
+-----------------------------------------------------------*/
+#capalogin{font-size:.9em;line-height:1em;background-color:#F7F7F7;width:320px;margin:1% auto;padding:1% 2% 2%;border-radius: 2px;box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3)}
+#capalogin .icono_user{font-size:9em;color:#4374E0;margin:10% 0 6%}
+#capalogin INPUT[type=text], #capalogin INPUT[type=password]{width:100%;padding:1.8% 2%;vertical-align:middle;margin:0 0 1em;height:40px;font-size:1.2em;font-weight:300}
+#capalogin INPUT[type=submit] {width:100%;margin:0 0 1em}
+#capalogin input:-moz-placeholder,input::-webkit-input-placeholder, input::-webkit-input-placeholder,input:-moz-placeholder{color:#A9A9A9;font-weight:lighter;padding:.2em 0 0 0}
+
+
+/* Landscape phones and down */
+@media (max-width: 480px) { 
+	body{font-size:.8em}
+}
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { 
+	body{font-size:.9em}
+}
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { 
+	body{font-size:1em}
+}
+@media (min-width: 980px) and (max-width: 1399px) { 
+	body{font-size:1.1em}
+	.divinput{width:50%;float:left}
+}
+@media (min-width: 1400px) { 
+	body{font-size:1.2em}
+	.divinput{width:50%;float:left}
+}
 
 /*-----------------------------------------------------------
     Desde aqui son la fuente de la pagina y el FontAwesome

@@ -3,9 +3,9 @@ global $usuario;
 
 if ($usuario->Id == 0) {
 	?>
-	<nav id="cabecera">
+	<nav>
 		<ul id="menus">
-			<li><a href="./index.php?controlador=Inicio&accion=indice"><i class="fa fa-home"></i></a></li>
+			<li class="menuactual"><a href="./index.php?controlador=Inicio&accion=indice"><i class="fa fa-home"></i></a></li>
 		</ul>
 		<ul id="login">
 			<li><a href="./index.php?controlador=autentificacion&accion=login"><i class="fa fa-power-off"></i> Login</a></li>
@@ -14,13 +14,14 @@ if ($usuario->Id == 0) {
 	<?php
 }else{
 	?>
-	<nav id="cabecera">
+	<nav>
 		<ul id="menus">
 			<li><a href="./index.php?controlador=Inicio&accion=indice"><i class="fa fa-home"></i></a></li>
-			<?php if ($usuario->isInRol("Administrador Profesor")) { ?>
-				<li><a href="./index.php?controlador=Alumno&accion=indice">Alumnos</a></li>
+			<?php if ($usuario->isInRol("Administrador")) { ?>
+				<li class="menuactual"><a href="./index.php?controlador=Usuario&accion=indice">Usuarios</a></li>
+			<?php } else if ($usuario->isInRol("Profesor")) { ?>
+				<li><a href="./index.php?controlador=Usuario&accion=indice">Alumnos</a></li>
 			<?php } ?>
-			
 		</ul>
 					
 		<ul id="login">
@@ -31,16 +32,3 @@ if ($usuario->Id == 0) {
 	<?php
 }
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
