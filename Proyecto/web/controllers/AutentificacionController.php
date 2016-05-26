@@ -1,9 +1,6 @@
 <?php
 class AutentificacionController extends ControllerBase
 {
-	private $_Nombre = "autentificacion";
-	private $_Method;
-	
     function __construct()
     {
 		parent::__construct("Autentificacion");

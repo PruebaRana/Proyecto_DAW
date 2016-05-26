@@ -36,5 +36,32 @@ class SesionModel
 	}
     // Constructores / destructores y magicos //
 	
+	function isInRol($aRoles = null) {
+		$res = false;
+		if ($this->Id > 0) 
+		{
+			if($aRoles != null)
+			{
+				$lsRoles = explode(" ", $aRoles);
+				if($this->Perfiles != null)
+				{
+					$lsPerfiles = "|".$this->Perfiles."|";
+					foreach($lsRoles as $lsRol)
+					{
+						if (strpos($lsPerfiles, "|".$lsRol."|") !== false) {
+							$res = true;
+							break;
+						}				
+					}
+				}
+			}
+			else
+			{
+				$res = true;
+			}
+		}
+		return $res;
+	}
+	
 }
 ?>

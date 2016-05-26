@@ -18,7 +18,7 @@ class FrontController
 		session_start();
 		$_SESSION = unserialize(serialize($_SESSION));
 		global $usuario;
-		$usuario = obtenParametroArray($_SESSION, "user");
+		$usuario = obtenParametroArray($_SESSION, "user", new SesionModel());
 		
         // Por similitud con otros MVC los controladores terminarán todos en Controller. Por ej, la clase controladora Items, será ItemsController
  
