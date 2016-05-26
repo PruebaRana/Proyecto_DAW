@@ -1,5 +1,5 @@
 <?php
-class LogonModel
+class LogonModel extends ModelBase
 {
     public $Id;
     public $Nombre;
@@ -8,13 +8,12 @@ class LogonModel
     public $RememberMe;
 	public $Perfiles;
 
-	protected $_db;
-
+	/* Si implementamos __construct, acordarse de llamar tmb al __construct del parent, ModelBase, para tener acceso a la BD
     public function __construct()
     {
-        // Obtenemos la única instancia a la BD
-        $this->_db = ConexionBD::GetInstance();		
+		parent::__construct();
     }
+	*/
  
 	public function ComprobarUserPass($asUsuario, $asClave) {
 		$res = null;

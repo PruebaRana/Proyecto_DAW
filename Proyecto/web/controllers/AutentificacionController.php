@@ -1,19 +1,17 @@
 <?php
-class AutentificacionController
+class AutentificacionController extends ControllerBase
 {
 	private $_Nombre = "autentificacion";
 	private $_Method;
 	
     function __construct()
     {
-        //Creamos una instancia de nuestro mini motor de plantillas
-        $this->view = new View();
-		$this->_Method = $_SERVER['REQUEST_METHOD'];
+		parent::__construct("Autentificacion");
     }
-    public function __destruct() {
+    public function __destruct() 
+	{
     }	
- 
- 
+  
     public function login()
     {
 		if($this->_Method == "POST")
@@ -64,7 +62,7 @@ class AutentificacionController
 			
 			$_SESSION["user"] = $usuario;
 			// Redirigir al indice
-			$this->redirect();
+			FrontController::redirect();
 		}
 		else
 		{
@@ -87,15 +85,10 @@ class AutentificacionController
 			);
 		}
 		// Redirigir al indice
-		$this->redirect();
+		FrontController::redirect();
     }
 	
 	
-	
-	
-	public function redirect($controlador=CONTROLADOR_DEFECTO,$accion=ACCION_DEFECTO){
-        header("Location:index.php?controlador=".$controlador."&accion=".$accion);
-    }	
 	
     public function agregar()
     {

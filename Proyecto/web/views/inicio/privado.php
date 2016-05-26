@@ -26,7 +26,7 @@
 			<br>
 			
 			<?php
-				echo "nombre: " . $nombre;
+				echo "titulo: " . "ss";
 			?>
 			
 			<br>

@@ -7,7 +7,9 @@ class FrontController
         require_once "libs/Config.php"; 		//de configuracion
         require_once 'libs/ConexionDB.php'; 	//Acceso a BD por PDO con singleton
         require_once 'libs/Utiles.php'; 		//
-
+        require_once 'libs/ControllerBase.php'; 		//
+		require_once 'libs/ModelBase.php'; 		//
+		
         require_once 'libs/View.php'; 			//Mini motor de plantillas
         require_once 'config.php'; 				//Archivo con configuraciones.
 
@@ -55,5 +57,11 @@ class FrontController
         $controller = new $controllerName();
         $controller->$actionName();
     }
+
+	static function redirect($controlador=CONTROLADOR_DEFECTO,$accion=ACCION_DEFECTO)
+	{
+		header("Location:index.php?controlador=".$controlador."&accion=".$accion);
+    }	
+
 }
 ?>
