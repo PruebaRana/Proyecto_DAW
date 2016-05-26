@@ -38,7 +38,7 @@ function EstaLogueado($aRoles = null) {
 	}
 	
 	if(!$res) {
-		header("Location:index.php?controller=".CONTROLADOR_DEFECTO."&action=".ACCION_DEFECTO);
+		header("Location:index.php?controlador=autentificacion&accion=login");
 		die();
 	}
 }

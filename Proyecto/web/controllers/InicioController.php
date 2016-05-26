@@ -49,7 +49,7 @@ class InicioController
         //Pasamos a la vista toda la información que se desea representar
         //$data['listado'] = $listado;
 		$data['ltitulo'] = "Hola melon";
- die();
+ 
         //Finalmente presentamos nuestra plantilla
         $this->view->show($this->_Nombre . "/privado.php", $data);
     }
