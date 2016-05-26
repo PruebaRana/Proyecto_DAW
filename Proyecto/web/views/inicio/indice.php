@@ -27,7 +27,7 @@
 			<p>Una vez que haya generado la BD, elimine la carpeta instalar.</p>
 			<br>
 
-			Titulo: <?php echo $vars["ltitulo"]; ?>
+			Titulo: <?php echo $ltitulo; ?>
 			<br>
 			ole ole ole
 			

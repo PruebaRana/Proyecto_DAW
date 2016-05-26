@@ -21,7 +21,7 @@
 			<h1 class="Tcen">Entrada al sistema</h1>
 			<div id="capalogin" class="Tcen">
 				<div class="Tcen icono_user"><i class="fa fa-user"></i></div>
-				<div class="Tcen rojo mensaje"><?php echo $vars["mensaje"];?></div>
+				<div class="Tcen rojo mensaje"><?php echo $mensaje;?></div>
 				
 				<form action="./index.php?controlador=autentificacion&accion=login" autocomplete="off" method="post" novalidate="novalidate" >
 					<input autocomplete="off" id="UserName" maxlength="10" name="UserName" placeholder="Usuario" type="text" value="" />

@@ -8,12 +8,12 @@ class LogonModel
     public $RememberMe;
 	public $Perfiles;
 
-	private $_db;
+	protected $_db;
 
-    public function __construct($aDB = null)
+    public function __construct()
     {
-        //Traemos la única instancia de PDO
-        $this->_db = conectarDB($aDB);
+        // Obtenemos la única instancia a la BD
+        $this->_db = ConexionBD::singleton();		
     }
  
 	public function ComprobarUserPass($asUsuario, $asClave) {

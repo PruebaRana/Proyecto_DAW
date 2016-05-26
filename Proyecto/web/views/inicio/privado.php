@@ -25,9 +25,11 @@
 			<h1 class="Tcen">Seccion privada</h1>
 			<br>
 			
+			<?php
+				echo "nombre: " . $nombre;
+			?>
 			
 			<br>
-			
 			
 		</section>
 		

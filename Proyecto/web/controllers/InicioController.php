@@ -2,18 +2,15 @@
 class InicioController
 {
 	private $_Nombre = "inicio";
-	private $_db;
 	private $_Method;
 	
     function __construct()
     {
         //Creamos una instancia de nuestro mini motor de plantillas
         $this->view = new View();
-		$this->_db = conectarDB(null);
 		$this->_Method = $_SERVER['REQUEST_METHOD'];
     }
     public function __destruct() {
-        desconectarDB($this->_db);
     }	
  
     public function indice()
@@ -48,10 +45,10 @@ class InicioController
  
         //Pasamos a la vista toda la información que se desea representar
         //$data['listado'] = $listado;
-		$data['ltitulo'] = "Hola melon";
- 
-        //Finalmente presentamos nuestra plantilla
-        $this->view->show($this->_Nombre . "/privado.php", $data);
+//		$vista->show('listado.php', array("nombre" => "Juan"));
+        
+		//Finalmente presentamos nuestra plantilla
+        $this->view->show($this->_Nombre."/privado.php", array("nombre" => "Juan"));
     }
 
     public function agregar()

@@ -2,18 +2,15 @@
 class AutentificacionController
 {
 	private $_Nombre = "autentificacion";
-	private $_db;
 	private $_Method;
 	
     function __construct()
     {
         //Creamos una instancia de nuestro mini motor de plantillas
         $this->view = new View();
-		$this->_db = conectarDB(null);
 		$this->_Method = $_SERVER['REQUEST_METHOD'];
     }
     public function __destruct() {
-        desconectarDB($this->_db);
     }	
  
  
@@ -52,7 +49,7 @@ class AutentificacionController
         require_once 'models/LoginModel.php';
  
         //Creamos una instancia de nuestro "modelo"
-        $item = new LogonModel($this->_db);
+        $item = new LogonModel();
 		
 		$Usuario = obtenParametroArray($_POST, "UserName");
 		$Password = obtenParametroArray($_POST, "Password");

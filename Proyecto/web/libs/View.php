@@ -2,7 +2,7 @@
 /*
  El uso es bastante sencillo:
  $vista = new View();
- $vista->show('listado.php', array("nombre" => "Juan"));
+ $vista->show('listado.php', array("Prueba" => "Patata"));
 */
 class View
 {
@@ -33,7 +33,8 @@ class View
         {
 			foreach ($vars as $key => $value)
 			{
-				$key = $value;
+				// Ojo al doble dollar, para crear la variable con el nombre de la variable
+				$$key = $value;
 			}
 		}
  

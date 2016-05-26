@@ -1,14 +1,12 @@
 <?php
 /*
  Uso:
- 
  $config = Config::singleton();
  $config->set('nombre', 'Federico');
  echo $config->get('nombre');
  
  $config2 = Config::singleton();
  echo $config2->get('nombre');
- 
 */
 class Config
 {
