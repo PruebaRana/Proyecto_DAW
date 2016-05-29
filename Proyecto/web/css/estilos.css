@@ -1,19 +1,34 @@
-*{margin:0;padding:0;border:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
+*{margin:0;padding:0;border:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box; list-style:none; text-decoration:none;}
 HTML{width:100%;height:100%}
 BODY{font-family:Arial;background:#FFFF;font-size:1em;width:100%;height:100%;padding:2em 0 16px 0}
 #pagina{}
 HEADER{position: absolute;top:0;width:100%;height:2em;z-index:1000;font-family:'roboto';padding: 0.3em;}
 
 /* El menu superior */
-nav{display: block;}
-ul{display: inline;}
-ul li {display: inline;padding-left: 1em;}
+nav{display: block; background: #333;}
+nav li{background:#333; padding: 0em 1em 0em 1em;} 
+nav li li{background:#333; padding: 0.2em 1em 0.2em 1em;} 
+nav > ul > li{float:left; display: inline; inline;padding-left: 1em;}
+nav li a{background: #333; color: #FFF; display:block;  }
+
+/* SubMenus */
+nav ul li ul{display: none; position: absolute; min-width:140px;}
+nav ul li ul li{display: none;}
+nav ul li:hover > ul{display: block;}
+nav ul li:hover > ul li{display: block;}
+/* Submenus nivel 3 */
+nav ul li ul li{position: relative;}
+nav ul li ul li ul{right: -140px; top:0;}
+/* Flecha */
+span.flecha {padding-left:4px; display:none;}
+nav ul li a:not(:last-child) span.flecha {display:inline;}
 
 #cabecera a, #pie a, #cabecera a:visited, #pie a:visited, #cabecera a:active, #pie a:active{color:#aaa}
 #cabecera a:hover, #pie a:hover, #menus li.menuactual a:hover{color:#eee}
 #menus li.menuactual a{color:#ccc}
-#menus{float:left;}
+
 #login{float:right;}
+
 /* El menu superior */
 
 /* CONTENIDO
