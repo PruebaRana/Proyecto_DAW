@@ -10,14 +10,8 @@
 		<input id="Buscador"></input>
 		<div id="OpcionesBuscador" style="width:120px">
 			<div data-options="name:'Nombre'">Nombre</div>
-			<div data-options="name:'DNI'">DNI</div>
-			<div data-options="name:'Telefono'">Telefono</div>
-			<div data-options="name:'Movil'">Movil</div>
+			<div data-options="name:'DNI'">Usuario</div>
 			<div data-options="name:'Correo'">Email</div>
-			<div data-options="name:'Direccion'">Direccion</div>
-			<div data-options="name:'Provincia'">Provincia</div>
-			<div data-options="name:'Poblacion'">Poblacion</div>
-			<div data-options="name:'CP'">Cod. Postal</div>
 		</div>
 	</div>
 
@@ -80,10 +74,8 @@
 							}
 						} 
 					},
+					{ field: 'Usuario', title: 'Usuario', width: 200, sortable: 'true'},
 					{ field: 'Nombre', title: 'Nombre', width: 200, sortable: 'true'},
-					{ field: 'DNI', title: 'DNI/NIE/CIF', sortable: 'true', align: 'center', resizable: false},
-					{ field: 'Telefono', title: 'Telefono', align: 'center', sortable: 'true', resizable: false, width: 0},
-					{ field: 'Movil', title: 'Movil', align: 'center', sortable: 'true', resizable: false, width: 0},
 					{ field: 'Correo', title: 'Email', sortable: 'true', width: 0,
 						formatter: function (value, row, index) {
 							if (value != null && value.length > 0) {
@@ -93,11 +85,7 @@
 							}
 						}
 					},
-					{ field: 'Direccion', title: 'Direccion', width: 150, sortable: 'true'},
-					{ field: 'Provincia', title: 'Provincia', sortable: 'true', resizable: false},
-					{ field: 'Poblacion', title: 'Poblacion', sortable: 'true', hidden: 'true', resizable: false},
-					{ field: 'CP', title: 'CP', align: 'right', sortable: 'true', hidden: 'true', resizable: false},
-					{ field: 'Vitalicio', title: 'VIP', align: 'center', sortable: 'true',
+					{ field: 'Activo', title: 'Activo', align: 'center', sortable: 'true',
 						formatter: function (value, row, index) {
 							if (value != null && value == 1) {
 								return '<i class="fa fa-gift fa-lg purpura4"></i>';
@@ -111,7 +99,7 @@
 				onHeaderContextMenu: function (e, field) {
 					e.preventDefault();
 					if (!cmenu) {
-						createColumnMenu("Pais,Direccion,CP,Provincia,Poblacion");
+						createColumnMenu("");
 					}
 					cmenu.menu('show', {
 						left: e.pageX,

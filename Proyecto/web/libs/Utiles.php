@@ -29,4 +29,31 @@ function EstaLogueado($aRoles = null) {
 	}
 }
 
+// Funciones para el tratamiento de texto
+function sanitizar ($cadena){
+	$lsRes = str_replace("'", "", $cadena);
+	$lsRes = str_replace("\"", "", $lsRes);
+	return $lsRes;
+}
+function normaliza ($cadena){
+    $originales =  'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ';
+    $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
+    $cadena = utf8_decode($cadena);
+    $cadena = strtr($cadena, utf8_decode($originales), $modificadas);
+    $cadena = strtolower($cadena);
+    return utf8_encode($cadena);
+}
+function capitalizarPalabras ($cadena){
+	return ucwords(strtolower($cadena));
+}
+function capitalizarFrases ($cadena){
+	$cadenas = explode('.',$cadena);
+	$cadena_final='';
+	foreach ($cadenas as $cadena){   
+	   $cadena_sin_espacios = ltrim($cadena);
+	   $cadena_final .= '. '.ucfirst($cadena_sin_espacios);
+	}
+	return substr($cadena_final,1); 
+}
+
 ?>

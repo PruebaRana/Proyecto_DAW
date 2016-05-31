@@ -9,10 +9,6 @@
 <p>Una vez que haya generado la BD, elimine la carpeta instalar.</p>
 <br>
 
-Titulo: <?php echo $ltitulo; ?>
-<br>
-ole ole ole
-<br>
 
 <?php $seccionContenido = ob_get_clean() ?>
 
