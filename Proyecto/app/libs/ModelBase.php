@@ -2,7 +2,6 @@
 /*
  Clase base para los modelos, se encarga de mantener acceso con la base de datos
 */
-
 abstract class ModelBase
 {
 	protected $_db;
@@ -16,4 +15,19 @@ abstract class ModelBase
     }
 	
 }
+
+/*
+	Clase usada por los modelos cuando deben mandar datos para un combo
+*/
+class DatosCombo {
+	var $id;
+	var $nombre;
+
+    public function __construct($asId=null, $asNombre=null)
+    {
+        $this->id = $asId;
+		$this->nombre = $asNombre; 
+    }
+} 
+
 ?>

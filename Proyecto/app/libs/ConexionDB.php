@@ -450,6 +450,162 @@ class ConexionBD extends PDO
 	}
 	// BLOQUE Ciclos
 	
+	// BLOQUE Grupos
+	public function GruposObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
+	{
+		$lList = array();
+		$_PreparePDO = null;
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			$lsSort = " ORDER BY ";
+			$lsLimit = $this->ObtenLimit($aiPaginaActual, $aiItemsPorPagina);
+			
+			$validColumns = array( "nombre", "ciclo" );
+			$campoOrdenacion = strtolower($asCampoOrdenacion);
+			if(in_array($campoOrdenacion, $validColumns))
+			{
+				if($campoOrdenacion == "ciclo"){
+					$lsSort .= "b.Nombre";
+				}
+				else{
+					$lsSort .= "a.".$asCampoOrdenacion;
+				}
+			}
+			else
+			{
+				$lsSort .= "a.Nombre";
+			}
+			$lsSort .= $this->ObtenOrder($asTipoOrdenacion);
+			
+			// Ojo, tenemos que procesar el asWhere para obtener un array de valores
+			// y asi usar la parametrizacion de PDO
+			$lsSQL = "SELECT A.Id, A.Nombre, A.IdCiclo, B.Nombre as Ciclo FROM Grupos A LEFT JOIN Ciclos B ON A.IdCiclo = B.Id";
+			if (Count($asWhere) > 0)
+			{
+				$lsSQL .= " WHERE ".$asWhere->Where;
+				$_PreparePDO = $asWhere->ArrayWhere;
+			}
+			$lsSQL .= $lsSort.$lsLimit.";";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute($_PreparePDO);
+
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new GrupoModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
+					$Item->IdCiclo = sanitizar(obtenParametroArray($valor, "idciclo"));
+					$Item->Ciclo = sanitizar(obtenParametroArray($valor, "ciclo"));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
+
+		return $lList;
+	}
+
+	public function GruposCount($asWhere = array())
+	{
+		$liId = -1;
+		$_PreparePDO = null;
+		// Preparamos la SQL
+		$lsSQL = "Select Count(1) as Cantidad FROM Grupos A LEFT JOIN Ciclos B ON A.IdCiclo = B.Id";
+		if (Count($asWhere) > 0)
+		{
+			$lsSQL .= " WHERE ".$asWhere->Where;
+			$_PreparePDO = $asWhere->ArrayWhere;
+		}
+		$lsSQL .= "";
+		
+		// Obtenemos el resultado del count
+		$result = $this->prepare($lsSQL);
+		$result->execute($_PreparePDO);
+		$cuenta = $result->rowCount();
+		if ($result && $result->rowCount()>0) {
+			$row = $result->fetch();
+			$liId = obtenParametroArray($row, "Cantidad");
+		}
+		return $liId;
+	}
+
+	public function GruposItem($aiId)
+	{
+		$Item = null;
+		// Montamos el WherePDO para obtener este Id
+		$lWherePDO = new WherePDO();
+		$lWherePDO->Where = "a.id=:id";
+		$lWherePDO->ArrayWhere = array(":id" => $aiId);
+		
+		$lResultados = $this->GruposObtenerPagina($lWherePDO);
+		if($lResultados != null && Count($lResultados) > 0)
+		{
+			$Item = $lResultados[0];
+		}
+
+		return $Item;
+	}
+	
+	public function GruposAñadir($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "INSERT INTO Grupos (IdCiclo, Nombre)";
+			$lsSQL .= " VALUES (:IdCiclo,:Nombre);";
+			$lArray = array(":IdCiclo" => $aItem->IdCiclo, ":Nombre" =>$aItem->Nombre );
+/*
+echo "SQL: ".$lsSQL."<br>";
+echo "p: ".var_dump($lArray)."<br>";			
+die;
+*/
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+    
+	public function GruposModificar($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "UPDATE Grupos SET IdCiclo=:IdCiclo, Nombre=:Nombre WHERE ID=:Id ";
+			$lArray = array(":IdCiclo" => $aItem->IdCiclo, ":Nombre" => $aItem->Nombre, ":Id" => $aItem->Id);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+
+	public function GruposEliminar($aiId = 0)
+	{
+		$liRes = 0;
+		if($aiId > 0)
+		{
+			$lsSQL = "DELETE FROM Grupos WHERE ID=:Id ";
+			$lArray = array(":Id" => $aiId);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+	// BLOQUE Grupos
+	
 	
 	
 	// usados por la propia clase para obtener el order y el limit en las select
