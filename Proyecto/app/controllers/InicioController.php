@@ -12,7 +12,7 @@ class InicioController extends ControllerBase
     public function indice()
     {
         //Incluye el modelo que corresponde
-        //require 'models/ItemsModel.php';
+        //require $config->get('Ruta')."web/".'models/ItemsModel.php';
  
         //Creamos una instancia de nuestro "modelo"
         //$items = new ItemsModel();
@@ -31,7 +31,7 @@ class InicioController extends ControllerBase
     public function privado()
     {
         //Incluye el modelo que corresponde
-        //require 'models/PruModel.php';
+        //require $config->get('Ruta')."web/".'models/PruModel.php';
  
         //Creamos una instancia de nuestro "modelo"
  
@@ -44,9 +44,6 @@ class InicioController extends ControllerBase
         $this->view->show($this->_Nombre."/privado.php", $data);
     }
 
-    public function agregar()
-    {
-        echo 'Aquí incluiremos nuestro formulario para insertar items';
-    }
+
 }
 ?>

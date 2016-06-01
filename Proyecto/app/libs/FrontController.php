@@ -3,18 +3,23 @@ class FrontController
 {
     static function main()
     {
-        //Incluimos algunas clases:
-        require_once "libs/Config.php"; 		//de configuracion
-        require_once 'libs/ConexionDB.php'; 	//Acceso a BD por PDO con singleton
-        require_once 'libs/Utiles.php'; 		//
-        require_once 'libs/ControllerBase.php'; 		//
-		require_once 'libs/ModelBase.php'; 		//
+		//Obtenemos la URL base y la Ruta local
+		$lsURL = str_replace("/index.php", "", $_SERVER["SCRIPT_NAME"]);
+		$lsRuta = str_replace("web\index.php", "", $_SERVER["SCRIPT_FILENAME"]);
 		
-        require_once 'libs/View.php'; 			//Mini motor de plantillas
-        require_once 'config.php'; 				//Archivo con configuraciones.
+        //Incluimos algunas clases:
+        require_once $lsRuta.'app/libs/Config.php'; 		//de configuracion
+        require_once $lsRuta.'app/libs/ConexionDB.php'; 	//Acceso a BD por PDO con singleton
+        require_once $lsRuta.'app/libs/Utiles.php'; 		//
+        require_once $lsRuta.'app/libs/ControllerBase.php'; 		//
+		require_once $lsRuta.'app/libs/ModelBase.php'; 		//
+		
+        require_once $lsRuta.'app/libs/View.php'; 			//Mini motor de plantillas
+        require_once $lsRuta.'app/config.php'; 				//Archivo con configuraciones.
+        require_once $lsRuta.'app/libs/nocsrf.php'; 		//Evita ataques csfr, implementa el ValidateAntiForgeryToken de .NET
 
 		// Iniciamos la sesion
-		require_once 'models/SessionModel.php';
+		require_once $lsRuta.'app/models/SessionModel.php';
 		session_start();
 		$_SESSION = unserialize(serialize($_SESSION));
 		global $usuario;
@@ -36,9 +41,12 @@ class FrontController
 			$actionName = "indice";
 		}
  
-        $controllerPath = $config->get('controllersFolder') . $controllerName . '.php';
- 
-        //Incluimos el fichero que contiene nuestra clase controladora solicitada
+		// Nos guardamos en el config la URL y la Ruta base.
+		$config->set('URL', $lsURL);
+		$config->set('Ruta', $lsRuta);
+        $controllerPath = $lsRuta.$config->get('controllersFolder').$controllerName.'.php';
+        
+		// Incluimos el fichero que contiene nuestra clase controladora solicitada
         if(is_file($controllerPath)){
 			require $controllerPath;
 		} else {
@@ -60,8 +68,17 @@ class FrontController
 
 	static function redirect($controlador=CONTROLADOR_DEFECTO,$accion=ACCION_DEFECTO)
 	{
-		header("Location:index.php?controlador=".$controlador."&accion=".$accion);
+		header("Location:".FrontController::getURLRaiz()."/seccion/".$controlador."/".$accion);
     }	
 
+	static function getURL($controlador=CONTROLADOR_DEFECTO,$accion=ACCION_DEFECTO)
+	{
+		return FrontController::getURLRaiz()."/seccion/".$controlador."/".$accion;
+    }	
+	static function getURLRaiz()
+	{
+		$config = Config::GetInstance();
+		return $config->get('URL');
+    }	
 }
 ?>

@@ -4,6 +4,9 @@ class AutentificacionController extends ControllerBase
     function __construct()
     {
 		parent::__construct("Autentificacion");
+
+		// Se incluye el modelo que corresponde
+        require_once $this->_Config->get('Ruta').$this->_Config->get('modelsFolder').'LoginModel.php';
     }
     public function __destruct() 
 	{
@@ -22,9 +25,6 @@ class AutentificacionController extends ControllerBase
     }
     private function login_get()
     {
-        //Incluye el modelo que corresponde
-        require_once 'models/LoginModel.php';
- 
         //Creamos una instancia de nuestro "modelo"
         $item = new LogonModel();
  
@@ -40,9 +40,6 @@ class AutentificacionController extends ControllerBase
 	}
     private function login_post()
     {
-		//Incluye el modelo que corresponde
-        require_once 'models/LoginModel.php';
- 
         //Creamos una instancia de nuestro "modelo"
         $item = new LogonModel();
 		
@@ -83,13 +80,6 @@ class AutentificacionController extends ControllerBase
 		}
 		// Redirigir al indice
 		FrontController::redirect();
-    }
-	
-	
-	
-    public function agregar()
-    {
-        echo 'Aquí incluiremos nuestro formulario para insertar items';
     }
 }
 ?>

@@ -17,7 +17,7 @@
 <?php $seccionContenido = ob_get_clean() ?>
 
 <?php ob_start() ?>
-<script src="./js/md5.min.js" type="text/javascript"></script>
+<script src="<?php echo $config->get('URL'); ?>/js/md5.min.js" type="text/javascript"></script>
 <script>
 	$(document).ready(function () { 
 		$("#UserName").focus(); 
@@ -38,4 +38,4 @@
 </script>
 <?php $seccionJS = ob_get_clean() ?>
 
-<?php include 'views/plantilla.php' ?>
+<?php include $config->get('Ruta').$config->get('viewsFolder').'plantilla.php' ?>

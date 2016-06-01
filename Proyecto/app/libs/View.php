@@ -18,7 +18,7 @@ class View
         $config = Config::GetInstance();
  
         // Montamos la ruta a la plantilla
-        $path = $config->get('viewsFolder') . $name;
+        $path = $config->get('Ruta').$config->get('viewsFolder').$name;
  
         //Si no existe el fichero en cuestion, mostramos un 404
         if (file_exists($path) == false)

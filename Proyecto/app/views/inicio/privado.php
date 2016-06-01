@@ -5,13 +5,20 @@
 
 <?php
 	echo "titulo: " . "ss";
+
+
+
+  echo "<pre>";
+  print_r($_SERVER);
+  echo "</pre>";	
+	
 ?>
 
 <br>
 
 <?php $seccionContenido = ob_get_clean() ?>
 
-<?php include 'views/plantilla.php' ?>
+<?php include $config->get('Ruta').$config->get('viewsFolder').'plantilla.php' ?>
 
 
 

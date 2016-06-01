@@ -3,15 +3,13 @@
 
 	<table id="dg"></table>
 	<div id="toolbar" style="display:none">
-		<a id="Add" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="javascript:Añadir('Añadir un nuevo usuario', 310);" plain="true"></a>&nbsp;
-		<a id="Edit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',disabled:true" onclick="javascript:Editar('Edicion del usuario', 310);" plain="true"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a id="Add" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="javascript:Añadir('Añadir una nueva valoración', 310);" plain="true"></a>&nbsp;
+		<a id="Edit" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit',disabled:true" onclick="javascript:Editar('\'Edición de la valoración \' + lItem.Nombre', 310);" plain="true"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<a id="Del" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove',disabled:true" onclick="javascript:Borrar();" plain="true"></a>&nbsp; &nbsp; &nbsp;
 		
 		<input id="Buscador"></input>
 		<div id="OpcionesBuscador" style="width:120px">
 			<div data-options="name:'Nombre'">Nombre</div>
-			<div data-options="name:'DNI'">Usuario</div>
-			<div data-options="name:'Correo'">Email</div>
 		</div>
 	</div>
 
@@ -19,17 +17,17 @@
 <?php $seccionContenido = ob_get_clean() ?>
 
 <?php ob_start() ?>
-<script src="js/Logica/Listados.js" type="text/javascript"></script>		
+<script src="<?php echo $config->get('URL'); ?>/js/Logica/Listados.js" type="text/javascript"></script>		
 <script>
 	jQuery(document).ready(function() {
 		$('#Centro').css("height", $('#contenido').css("height"));
 	});
 	
-	var lsTitulo = 'Listado de usuarios';
-	var lURLEdicion = '';
-	var lURLAñadir = '';
-	var lURLEliminar = '';
-	var lURLListado = '';
+	var lsTitulo = 'Listado de valoraciones';
+	var lURLAñadir = '<?PHP echo(obtenURLController("Valoracion", "crear")); ?>';
+	var lURLEdicion = '<?PHP echo(obtenURLController("Valoracion", "editar")); ?>&id=';
+	var lURLEliminar = '<?PHP echo(obtenURLController("Valoracion", "eliminarid")); ?>&id=';
+	var lURLListado = '<?php echo(obtenURLController("valoracion", "ObtenerDatos")); ?>';
 	lLiteralBusqueda = 'Escriba lo que desee buscar';
 	//
 	$(document).ready(function () {
@@ -61,39 +59,7 @@
 				striped: true,
 				columns: [[
 					{ field: 'Id', title: 'Id', width: 0, hidden: 'true'},
-					{ field: 'Fecha', title: 'Fecha', align: 'center', sortable: 'true', resizable: false,
-						formatter: function (value, row, index) {
-							if (value.length > 10) {
-								if(value == "0001/01/01 00:00:00") {
-									return " ";
-								}else{
-									return value.substring(0, 10);
-								}
-							} else {
-								return value;
-							}
-						} 
-					},
-					{ field: 'Usuario', title: 'Usuario', width: 200, sortable: 'true'},
 					{ field: 'Nombre', title: 'Nombre', width: 200, sortable: 'true'},
-					{ field: 'Correo', title: 'Email', sortable: 'true', width: 0,
-						formatter: function (value, row, index) {
-							if (value != null && value.length > 0) {
-								return '<a href="mailto:' + value + '">' + value + '</a>';
-							} else {
-								return ' ';
-							}
-						}
-					},
-					{ field: 'Activo', title: 'Activo', align: 'center', sortable: 'true',
-						formatter: function (value, row, index) {
-							if (value != null && value == 1) {
-								return '<i class="fa fa-gift fa-lg purpura4"></i>';
-							} else {
-								return ' ';
-							}
-						}
-					}
 				]],
 				idField: 'Id',
 				onHeaderContextMenu: function (e, field) {
@@ -136,28 +102,31 @@
 	});
 
 	function BorrarRegistro() {
-		// LLamar por Ajax al delete
+		// LLamar por Ajax al borrado
 		var lItem = $('#dg').datagrid('getSelected');
 		if (lItem != null) {
 			$.ajax({
 				type: "POST",
 				url: lURLEliminar + lItem.Id,
-				data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+				data: <?php echo json_encode(obtenerJSAntiCSRF()); ?>
 			}).done(function (msg) {
-				if(msg == true ) {
-					// Si todo es correcto, eliminar del grid y refrescar
-					$('#dg').datagrid('deleteRow', lIndexSelected).datagrid('clearSelections').datagrid('reload');
-					ActualizarBotones();
-				}else {
-					alert(msg);
-				}
+				if(msg){
+					resultObj = eval(msg);
+					if(resultObj["Estado"] == 1 ) {
+						// Si todo es correcto, eliminar del grid y refrescar
+						$('#dg').datagrid('deleteRow', lIndexSelected).datagrid('clearSelections').datagrid('reload');
+						ActualizarBotones();
+					}else {
+						$.messager.alert('DAW', resultObj["Error"], 'error'); 
+					}
+				}else{
+					$.messager.alert('DAW', "Error", 'error'); 
+				}				
 			});
 		}
 	}
-
 	function CerrarPanel() {}
-	
 </script>
 <?php $seccionJS = ob_get_clean() ?>
 
-<?php include 'views/plantilla.php' ?>
+<?php include $config->get('Ruta').$config->get('viewsFolder').'plantilla.php' ?>

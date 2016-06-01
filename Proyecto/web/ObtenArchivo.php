@@ -1,13 +1,15 @@
 <?php
 //Incluimos algunas clases:
-require_once "libs/Config.php"; 		//de configuracion
-require_once 'libs/ConexionDB.php'; 	//Acceso a BD por PDO con singleton
-require_once 'libs/Utiles.php'; 		//
+$lsRuta = str_replace("web\ObtenArchivo.php", "", $_SERVER["SCRIPT_FILENAME"]);
 
-require_once 'config.php'; 				//Archivo con configuraciones.
+require_once $lsRuta."web/"."libs/Config.php"; 		//de configuracion
+require_once $lsRuta."web/".'libs/ConexionDB.php'; 	//Acceso a BD por PDO con singleton
+require_once $lsRuta."web/".'libs/Utiles.php'; 		//
+
+require_once $lsRuta."web/".'config.php'; 				//Archivo con configuraciones.
 
 // Iniciamos la sesion
-require_once 'models/SessionModel.php';
+require_once $lsRuta."web/".'models/SessionModel.php';
 session_start();
 $_SESSION = unserialize(serialize($_SESSION));
 global $usuario;
@@ -16,8 +18,9 @@ $IdUsuario = $usuario->Id;
 
 // Obtenemos todos los parametros necesarios
 $lsROOT = __DIR__ ."/Contenidos/";
+$IdUser = $_GET['IdUser'];
 $File = $_GET['File'];
-$FicheroFinal = $lsROOT.$IdUsuario."/".$File;
+$FicheroFinal = $lsROOT.$IdUser."/".$File;
 $NombreFichero = basename($FicheroFinal);
 
 // Comprobaciones
@@ -31,6 +34,15 @@ if ( !file_exists( $FicheroFinal ) ) {
     echo "El fichero que esta intentando consultar no existe.";	
 	exit;
 }
+
+// 3 - Si el Rol no es Administrador ni profesor, el fichero debe ser del alumno
+if(!$usuario->isInRol("Administrador Profesor")) {
+	header('HTTP/1.0 403 Forbidden');
+    echo "<h1>Error 403 No tiene permisos suficientes.</h1>";
+    echo "No tiene permisos suficientes para acceder al fichero.";	
+	exit;
+}
+
 
 // Si todo lo anterior es correcto, obtener el fichero y mandarlo al cliente.
 $len = filesize($FicheroFinal);
