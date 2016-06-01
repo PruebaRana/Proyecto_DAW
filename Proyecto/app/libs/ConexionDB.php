@@ -163,7 +163,292 @@ class ConexionBD extends PDO
 	}
 	// BLOQUE Valoraciones
 	
+	// BLOQUE Cualidades
+	public function CualidadesObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
+	{
+		$lList = array();
+		$_PreparePDO = null;
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			$lsSort = " ORDER BY ";
+			$lsLimit = $this->ObtenLimit($aiPaginaActual, $aiItemsPorPagina);
+			
+			$validColumns = array( "nombre" );
+			if(in_array(strtolower($asCampoOrdenacion), $validColumns))
+			{
+				$lsSort .= $asCampoOrdenacion;
+			}
+			else
+			{
+				$lsSort .= "Nombre";
+			}
+			$lsSort .= $this->ObtenOrder($asTipoOrdenacion);
+			
+			// Ojo, tenemos que procesar el asWhere para obtener un array de valores
+			// y asi usar la parametrizacion de PDO
+			$lsSQL = "SELECT Id, Nombre FROM Cualidades";
+			if (Count($asWhere) > 0)
+			{
+				$lsSQL .= " WHERE ".$asWhere->Where;
+				$_PreparePDO = $asWhere->ArrayWhere;
+			}
+			$lsSQL .= $lsSort.$lsLimit.";";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute($_PreparePDO);
+		
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new CualidadModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
+
+		return $lList;
+	}
+
+	public function CualidadesCount($asWhere = array())
+	{
+		$liId = -1;
+		$_PreparePDO = null;
+		// Preparamos la SQL
+		$lsSQL = "Select Count(1) as Cantidad FROM Cualidades";
+		if (Count($asWhere) > 0)
+		{
+			$lsSQL .= " WHERE ".$asWhere->Where;
+			$_PreparePDO = $asWhere->ArrayWhere;
+		}
+		$lsSQL .= "";
+		// Obtenemos el resultado del count
+		$result = $this->prepare($lsSQL);
+		$result->execute($_PreparePDO);
+		$cuenta = $result->rowCount();
+		if ($result && $result->rowCount()>0) {
+			$row = $result->fetch();
+			$liId = obtenParametroArray($row, "Cantidad");
+		}
+		return $liId;
+	}
+
+	public function CualidadesItem($aiId)
+	{
+		$Item = null;
+		// Montamos el WherePDO para obtener este Id
+		$lWherePDO = new WherePDO();
+		$lWherePDO->Where = "id=:id";
+		$lWherePDO->ArrayWhere = array(":id" => $aiId);
+		
+		$lResultados = $this->CualidadesObtenerPagina($lWherePDO);
+		if($lResultados != null && Count($lResultados) > 0)
+		{
+			$Item = $lResultados[0];
+		}
+
+		return $Item;
+	}
 	
+	public function CualidadesAñadir($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "INSERT INTO Cualidades (Nombre)";
+			$lsSQL .= " VALUES (:Nombre);";
+			$lArray = array(":Nombre" => $aItem->Nombre);
+
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+    
+	public function CualidadesModificar($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "UPDATE Cualidades SET Nombre=:Nombre WHERE ID=:Id ";
+			$lArray = array(":Nombre" => $aItem->Nombre, ":Id" => $aItem->Id);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+
+	public function CualidadesEliminar($aiId = 0)
+	{
+		$liRes = 0;
+		if($aiId > 0)
+		{
+			$lsSQL = "DELETE FROM Cualidades WHERE ID=:Id ";
+			$lArray = array(":Id" => $aiId);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+	// BLOQUE Cualidades
+	
+	// BLOQUE Ciclos
+	public function CiclosObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
+	{
+		$lList = array();
+		$_PreparePDO = null;
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			$lsSort = " ORDER BY ";
+			$lsLimit = $this->ObtenLimit($aiPaginaActual, $aiItemsPorPagina);
+			
+			$validColumns = array( "nombre", "descripcion" );
+			if(in_array(strtolower($asCampoOrdenacion), $validColumns))
+			{
+				$lsSort .= $asCampoOrdenacion;
+			}
+			else
+			{
+				$lsSort .= "Nombre";
+			}
+			$lsSort .= $this->ObtenOrder($asTipoOrdenacion);
+			
+			// Ojo, tenemos que procesar el asWhere para obtener un array de valores
+			// y asi usar la parametrizacion de PDO
+			$lsSQL = "SELECT Id, Nombre, Descripcion FROM Ciclos";
+			if (Count($asWhere) > 0)
+			{
+				$lsSQL .= " WHERE ".$asWhere->Where;
+				$_PreparePDO = $asWhere->ArrayWhere;
+			}
+			$lsSQL .= $lsSort.$lsLimit.";";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute($_PreparePDO);
+		
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new CicloModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
+					$Item->Descripcion = sanitizar(obtenParametroArray($valor, "descripcion"));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
+
+		return $lList;
+	}
+
+	public function CiclosCount($asWhere = array())
+	{
+		$liId = -1;
+		$_PreparePDO = null;
+		// Preparamos la SQL
+		$lsSQL = "Select Count(1) as Cantidad FROM Ciclos";
+		if (Count($asWhere) > 0)
+		{
+			$lsSQL .= " WHERE ".$asWhere->Where;
+			$_PreparePDO = $asWhere->ArrayWhere;
+		}
+		$lsSQL .= "";
+		// Obtenemos el resultado del count
+		$result = $this->prepare($lsSQL);
+		$result->execute($_PreparePDO);
+		$cuenta = $result->rowCount();
+		if ($result && $result->rowCount()>0) {
+			$row = $result->fetch();
+			$liId = obtenParametroArray($row, "Cantidad");
+		}
+		return $liId;
+	}
+
+	public function CiclosItem($aiId)
+	{
+		$Item = null;
+		// Montamos el WherePDO para obtener este Id
+		$lWherePDO = new WherePDO();
+		$lWherePDO->Where = "id=:id";
+		$lWherePDO->ArrayWhere = array(":id" => $aiId);
+		
+		$lResultados = $this->CiclosObtenerPagina($lWherePDO);
+		if($lResultados != null && Count($lResultados) > 0)
+		{
+			$Item = $lResultados[0];
+		}
+
+		return $Item;
+	}
+	
+	public function CiclosAñadir($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "INSERT INTO Ciclos (Nombre, Descripcion)";
+			$lsSQL .= " VALUES (:Nombre,:Descripcion);";
+			$lArray = array(":Nombre" => $aItem->Nombre, ":Descripcion" => $aItem->Descripcion);
+
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+    
+	public function CiclosModificar($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "UPDATE Ciclos SET Nombre=:Nombre, Descripcion=:Descripcion WHERE ID=:Id ";
+			$lArray = array(":Nombre" => $aItem->Nombre, ":Descripcion" => $aItem->Descripcion, ":Id" => $aItem->Id);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+
+	public function CiclosEliminar($aiId = 0)
+	{
+		$liRes = 0;
+		if($aiId > 0)
+		{
+			$lsSQL = "DELETE FROM Ciclos WHERE ID=:Id ";
+			$lArray = array(":Id" => $aiId);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+	// BLOQUE Ciclos
 	
 	
 	

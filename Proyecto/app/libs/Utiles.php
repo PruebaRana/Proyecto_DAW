@@ -101,11 +101,12 @@ function normaliza ($cadena){
     $modificadas = 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
     $cadena = utf8_decode($cadena);
     $cadena = strtr($cadena, utf8_decode($originales), $modificadas);
-    $cadena = strtolower($cadena);
+    $cadena = mb_strtolower($cadena);
     return utf8_encode($cadena);
 }
+// OJO: No usar mb_strtolower, destroza acentos
 function capitalizarPalabras ($cadena){
-	return ucwords(strtolower($cadena));
+	return ucwords(mb_strtolower($cadena));
 }
 function capitalizarFrases ($cadena){
 	$cadenas = explode('.',$cadena);

@@ -1,12 +1,12 @@
 <?php
-class ValoracionController extends ControllerBase
+class CualidadController extends ControllerBase
 {
     function __construct()
     {
 		// A esta sección solo puede entrar los administradores.
 		EstaLogueado("Administrador");
 		
-		$lsController = "Valoracion";
+		$lsController = "Cualidad";
 		parent::__construct($lsController);
 		
 		// Se incluye el modelo que corresponde
@@ -21,7 +21,7 @@ class ValoracionController extends ControllerBase
     public function indice()
     {
         //Pasamos a la vista toda la información que se desea representar
-		$data['TituloPagina'] = "Listado de valoraciones";
+		$data['TituloPagina'] = "Listado de cualidades";
  
         //Finalmente presentamos nuestra plantilla
         $this->view->show($this->_Nombre."/indice.php", $data);
@@ -62,10 +62,10 @@ class ValoracionController extends ControllerBase
     private function crear_get()
     {
         //Creamos una instancia de nuestro "modelo"
-		$item = $this->ObtenNewModel();
+        $item = $this->ObtenNewModel();
  
         //Pasamos a la vista toda la información que se desea representar
-		$data['TituloPagina'] = "Añadir una valoración";
+		$data['TituloPagina'] = "Añadir una cualidad";
 		$data["Model"] = $item;
  
         //Finalmente presentamos nuestra plantilla
@@ -93,7 +93,7 @@ class ValoracionController extends ControllerBase
 		// Si llegamos aquí, no se ha guardado
 		
 		// Retornar la vista con el item cargado
-		$data['TituloPagina'] = "Añadir una valoración";
+		$data['TituloPagina'] = "Añadir una cualidad";
 		$data["Model"] = $item;
 
         //Finalmente presentamos nuestra plantilla
@@ -120,7 +120,7 @@ class ValoracionController extends ControllerBase
         $item = $this->ObtenModelPostId();
  
         //Pasamos a la vista toda la información que se desea representar
-		$data['TituloPagina'] = "Editar una valoración";
+		$data['TituloPagina'] = "Editar una cualidad";
 		$data["Model"] = $item;
  
         //Finalmente presentamos nuestra plantilla
@@ -148,7 +148,7 @@ class ValoracionController extends ControllerBase
 		// Si llegamos aquí, no se ha guardado
 		
 		// Retornar la vista con el item cargado
-		$data['TituloPagina'] = "Editar una valoración";
+		$data['TituloPagina'] = "Editar una cualidad";
 		$data["Model"] = $item;
 
         //Finalmente presentamos nuestra plantilla
@@ -193,12 +193,12 @@ class ValoracionController extends ControllerBase
 	// Este método instanciara el modelo cargándolo con los datos que viene por POST
 	private function ObtenNewModel($asWhereCampo = null, $asWhereValor = null)
 	{
-        return new ValoracionModel($asWhereCampo, $asWhereValor);
+        return new CualidadModel($asWhereCampo, $asWhereValor);
 	}
 	// Lo usaran crear_post/editar_post en las peticiones POST
 	private function ObtenModelPost()
 	{
-        $item = new ValoracionModel();
+        $item = new CualidadModel();
 		$item->Id = sanitizar(obtenParametroArray($_POST, "Id", 0));
 		$item->Nombre = sanitizar(obtenParametroArray($_POST, "Nombre", ""));
 		// Sanitizarlos, porque no nos fiamos del cliente
@@ -210,7 +210,7 @@ class ValoracionController extends ControllerBase
 	// Lo usaran editar_get/EliminarId en las peticiones POST
 	private function ObtenModelPostId()
 	{
-        $item = new ValoracionModel();
+        $item = new CualidadModel();
 		$Id = sanitizar(obtenParametroArray($_GET, "id", 0));
 		
 		// Sanitizarlos, porque no nos fiamos del cliente

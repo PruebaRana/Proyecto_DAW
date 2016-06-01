@@ -226,11 +226,11 @@ Upgrade Browser Prompt
 }
 @media (min-width: 980px) and (max-width: 1399px) { 
 	body{font-size:1.1em}
-	.divinput{width:50%;float:left}
+/*	.divinput{width:50%;float:left} */
 }
 @media (min-width: 1400px) { 
 	body{font-size:1.2em}
-	.divinput{width:50%;float:left}
+/*	.divinput{width:50%;float:left} */
 }
 
 /*-----------------------------------------------------------
