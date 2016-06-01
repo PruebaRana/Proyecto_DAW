@@ -27,10 +27,10 @@ class LogonModel extends ModelBase
 
 		if ($result && $result->rowCount()>0) {
 			foreach ($result as $valor) {
-				$this->Id = obtenParametroArray($valor, "id");
-				$this->Nombre = obtenParametroArray($valor, "nombre");
-				$this->Usuario = obtenParametroArray($valor, "usuario");
-				$this->Password = obtenParametroArray($valor, "clave");
+				$this->Id = sanitizar(obtenParametroArray($valor, "id"));
+				$this->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
+				$this->Usuario = sanitizar(obtenParametroArray($valor, "usuario"));
+				$this->Password = sanitizar(obtenParametroArray($valor, "clave"));
 				$res = $this;
 			}
 			$this->cargarPerfiles();
@@ -51,7 +51,7 @@ class LogonModel extends ModelBase
 
 		if ($result && $result->rowCount()>0) {
 			foreach ($result as $valor) {
-				$this->Perfiles .= obtenParametroArray($valor, "nombre") . "|";
+				$this->Perfiles .= sanitizar(obtenParametroArray($valor, "nombre")) . "|";
 			}
 		}
 	}

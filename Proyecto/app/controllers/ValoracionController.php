@@ -194,8 +194,8 @@ class ValoracionController extends ControllerBase
 	private function ObtenModelPost()
 	{
         $item = new ValoracionModel();
-		$item->Id = obtenParametroArray($_POST, "Id", 0);
-		$item->Nombre = obtenParametroArray($_POST, "Nombre", "");
+		$item->Id = sanitizar(obtenParametroArray($_POST, "Id", 0));
+		$item->Nombre = sanitizar(obtenParametroArray($_POST, "Nombre", ""));
 		// Sanitizarlos, porque no nos fiamos del cliente
 		$item->Sanitize();
 			
@@ -206,7 +206,7 @@ class ValoracionController extends ControllerBase
 	private function ObtenModelPostId()
 	{
         $item = new ValoracionModel();
-		$Id = obtenParametroArray($_GET, "id", 0);
+		$Id = sanitizar(obtenParametroArray($_GET, "id", 0));
 		
 		// Sanitizarlos, porque no nos fiamos del cliente
 		$item = $item->ObtenerItem($Id);

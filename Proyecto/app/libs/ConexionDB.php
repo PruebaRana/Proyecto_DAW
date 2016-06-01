@@ -60,8 +60,8 @@ class ConexionBD extends PDO
 			if ($result && $cuenta>0) {
 				foreach ($result as $valor) {
 					$Item = new ValoracionModel();
-					$Item->Id = obtenParametroArray($valor, "id");
-					$Item->Nombre = obtenParametroArray($valor, "nombre");
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
 					$lList[] = $Item;
 				}
 			}

@@ -43,8 +43,8 @@ class AutentificacionController extends ControllerBase
         //Creamos una instancia de nuestro "modelo"
         $item = new LogonModel();
 		
-		$Usuario = obtenParametroArray($_POST, "UserName");
-		$Password = obtenParametroArray($_POST, "Password");
+		$Usuario = sanitizar(obtenParametroArray($_POST, "UserName"));
+		$Password = sanitizar(obtenParametroArray($_POST, "Password"));
 		
 		$item->ComprobarUserPass($Usuario, $Password);
 		

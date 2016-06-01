@@ -26,12 +26,12 @@ class ParametrosObtenerDatos {
 
     function __construct($asCampoSortDefault = "id")
     {
-		$this->_page = obtenParametroArray($_POST, "page", 0);
-		$this->_rows = obtenParametroArray($_POST, "rows", 1);
-		$this->_sort = obtenParametroArray($_POST, "sort", $asCampoSortDefault);
-		$this->_order = obtenParametroArray($_POST, "order", "DESC");
-		$this->_whereCampo = obtenParametroArray($_POST, "WhereCampo", "");
-		$this->_whereValor = obtenParametroArray($_POST, "WhereValor", "");
+		$this->_page = sanitizar(obtenParametroArray($_POST, "page", 0));
+		$this->_rows = sanitizar(obtenParametroArray($_POST, "rows", 1));
+		$this->_sort = sanitizar(obtenParametroArray($_POST, "sort", $asCampoSortDefault));
+		$this->_order = sanitizar(obtenParametroArray($_POST, "order", "ASC"));
+		$this->_whereCampo = sanitizar(obtenParametroArray($_POST, "WhereCampo", ""));
+		$this->_whereValor = sanitizar(obtenParametroArray($_POST, "WhereValor", ""));
 	}
 } 
 

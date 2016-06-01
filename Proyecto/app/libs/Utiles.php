@@ -38,9 +38,62 @@ function obtenURLController($controller, $accion)
 
 
 // Funciones para el tratamiento de texto
-function sanitizar ($cadena){
-	$lsRes = str_replace("'", "", $cadena);
-	$lsRes = str_replace("\"", "", $lsRes);
+function ClearEvents($asTexto)
+{
+	return ClearCodeEvent($asTexto, "onBlur,onError,onFocus,onLoad,onResize,onUnload,onClick,onDblClick,onKeyDown,onKeyPress,onKeyUp,onMouseDown,onMouseMove,onMouseOut,onMouseOver,onMouseUp");
+}
+function ClearCodeEvent($asTexto, $asFilterEvent)
+{
+	$lsRes = $asTexto;
+	$lEventos = explode(",", $asFilterEvent);
+	foreach($lEventos as $lsItem)
+	{
+		$lsRes = preg_replace( "/".$lsItem."[ ]*=[ ]*(\"[^\"]+\"|\'[^\']+\'|[^ >]+[ >])/i", "" , $lsRes);
+	}
+	return $lsRes;
+}
+function ClearObjectsEmbed($asTexto)
+{
+	return ClearObjects($asTexto, "script,object,applet,embed");
+}
+function ClearObjects($asTexto, $asFilterObject)
+{
+	$lsRes = $asTexto;
+	$lEventos = explode(",", $asFilterObject);
+	foreach($lEventos as $lsItem)
+	{
+		$lsRes = preg_replace( "/((<".$lsItem.".*<\/[ ]?".$lsItem.">)|(<".$lsItem.".*\/>)|(<".$lsItem.">)|(<\/".$lsItem.">))/i", "" , $lsRes);
+	}
+	return $lsRes;
+} 
+function ClearJSScript($asTexto)
+{
+	$lsRes = $asTexto;
+	$lsRes = preg_replace( "/((<script.*<\/[ ]?script>)|(<script.*\/>)|(<script>)|(<\/script>))/i", "" , $lsRes);
+
+	return $lsRes;
+} 
+
+
+function sanitizar($asTexto, $aswAllowHTML = false){
+	$lsRes = $asTexto;
+	if ($aswAllowHTML)
+	{
+		// Eliminar los scripts
+		//$lsRes = ClearJSScript($lsRes);
+		$lsRes = ClearObjectsEmbed($lsRes);
+		// Eliminar los posibles eventos
+		$lsRes = ClearEvents($lsRes);
+		
+		// Escapar comillas y 
+		$lsRes = addslashes($lsRes);
+		//$lsRes = htmlentities($lsRes);
+	}
+	else
+	{
+		$lsRes = strip_tags($lsRes);
+	}
+	
 	return $lsRes;
 }
 function normaliza ($cadena){
