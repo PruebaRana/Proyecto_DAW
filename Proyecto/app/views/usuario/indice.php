@@ -10,7 +10,7 @@
 		<input id="Buscador"></input>
 		<div id="OpcionesBuscador" style="width:120px">
 			<div data-options="name:'Nombre'">Nombre</div>
-			<div data-options="name:'DNI'">Usuario</div>
+			<div data-options="name:'Usuario'">Usuario</div>
 			<div data-options="name:'Email'">Correo</div>
 			<div data-options="name:'Activo'">Activo</div>
 			<div data-options="name:'Roles'">Roles</div>

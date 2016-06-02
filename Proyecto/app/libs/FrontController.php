@@ -1,6 +1,7 @@
 <?php
 class FrontController
 {
+	private static $_URLFriendy = false;
     static function main()
     {
 		//Obtenemos la URL base y la Ruta local
@@ -45,6 +46,8 @@ class FrontController
 		$config->set('URL', $lsURL);
 		$config->set('Ruta', $lsRuta);
 		$config->set('Usuario', $usuario);
+		self::$_URLFriendy = $config->get('urlFriendly');
+
         $controllerPath = $lsRuta.$config->get('controllersFolder').$controllerName.'.php';
         
 		// Incluimos el fichero que contiene nuestra clase controladora solicitada
@@ -52,6 +55,8 @@ class FrontController
 			require $controllerPath;
 		} else {
 			// Lanzamos un 404
+			header('HTTP/1.0 404 Not Found');
+			echo "<h1>Error 404 Not Found</h1>";
 			die('El controlador no existe - 404 not found');
 		}
  
@@ -59,7 +64,9 @@ class FrontController
         if (is_callable(array($controllerName, $actionName)) == false)
         {
             trigger_error ($controllerName . '->' . $actionName . '` no existe', E_USER_NOTICE);
-            return false;
+			header('HTTP/1.0 404 Not Found');
+			echo "<h1>Error 404 Not Found</h1>";
+			die('La accion no existe - 404 not found');
         }
         
 		//Si todo esta bien, creamos una instancia del controlador y llamamos a la acción
@@ -69,12 +76,26 @@ class FrontController
 
 	static function redirect($controlador=CONTROLADOR_DEFECTO,$accion=ACCION_DEFECTO)
 	{
-		header("Location:".FrontController::getURLRaiz()."/seccion/".$controlador."/".$accion);
+		$URL = "";
+		if(FrontController::$_URLFriendy){
+			$URL = FrontController::getURLRaiz()."/seccion/".$controlador."/".$accion;
+		}else{
+			$URL = FrontController::getURLRaiz()."/index.php?controlador=".$controlador."&accion=".$accion;
+		}
+
+		header("Location:".$URL);
     }	
 
 	static function getURL($controlador=CONTROLADOR_DEFECTO,$accion=ACCION_DEFECTO)
 	{
-		return FrontController::getURLRaiz()."/seccion/".$controlador."/".$accion;
+		$URL = "";
+		if(FrontController::$_URLFriendy){
+			$URL = FrontController::getURLRaiz()."/seccion/".$controlador."/".$accion;
+		}else{
+			$URL = FrontController::getURLRaiz()."/index.php?controlador=".$controlador."&accion=".$accion;
+		}
+		
+		return $URL;
     }	
 	static function getURLRaiz()
 	{

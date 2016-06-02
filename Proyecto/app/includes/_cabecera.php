@@ -17,6 +17,7 @@ if ($usuario->Id == 0) {
 	<nav>
 		<ul id="menu">
 			<li><a href="<?php echo FrontController::getURL("Inicio", "indice"); ?>"><i class="fa fa-home"></i></a></li>
+			<li><a href="<?php echo FrontController::getURL("Proyecto", "indice"); ?>">Proyectos</a></li>
 			<?php if ($usuario->isInRol("Administrador")) { ?>
 				<li class="menuactual"><a href="<?php echo FrontController::getURL("Usuario", "indice"); ?>">Usuarios</a></li>
 				<li><a href="#">Auxiliares <i class="fa fa-caret-down"></i></a>
@@ -31,6 +32,7 @@ if ($usuario->Id == 0) {
 			<?php } else if ($usuario->isInRol("Profesor")) { ?>
 				<li><a href="<?php echo FrontController::getURL("Usuario", "indice"); ?>">Alumnos</a></li>
 			<?php } ?>
+		
 		</ul>
 					
 		<ul id="login">

@@ -81,7 +81,16 @@ class CicloModel extends ModelBase
 
 		return json_encode($lRes);
 	}
-	
+	public function ObtenerTodosTexto()
+	{
+		$lItems = $this->ObtenerPagina(0, 1, "Nombre", "ASC", null);
+		foreach ($lItems as $lItem)
+		{
+			$lRes[] = new DatosCombo($lItem->Nombre, $lItem->Nombre);
+		}
+
+		return json_encode($lRes);
+	}
 	/* Obtener lista de opciones para un combo */
 
 	/* Metodos auxiliares */

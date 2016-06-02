@@ -46,7 +46,6 @@ class ModuloModel extends ModelBase
     }
 	/* Magicos, contructor destructor acceso y seteo */
 
-	
 	/* Metodos principales */
 	public function ObtenerPagina($aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
 	{
@@ -77,6 +76,19 @@ class ModuloModel extends ModelBase
 	}
 	/* Metodos principales */
 
+	/* Obtener lista de opciones para un combo */
+	public function ObtenerTodos()
+	{
+		$lItems = $this->ObtenerPagina(0, 1, "Nombre", "ASC", null);
+		foreach ($lItems as $lItem)
+		{
+			$lRes[] = new DatosCombo($lItem->Id, $lItem->Nombre);
+		}
+
+		return json_encode($lRes);
+	}
+	/* Obtener lista de opciones para un combo */
+	
 	/* Metodos auxiliares */
 	public function IsValid()
 	{
@@ -106,7 +118,5 @@ class ModuloModel extends ModelBase
 		return $this;
 	}
 	/* Metodos auxiliares */
-	
 }
-
 ?>

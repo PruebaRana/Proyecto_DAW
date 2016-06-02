@@ -72,6 +72,30 @@ class GrupoModel extends ModelBase
 	}
 	/* Metodos principales */
 
+	/* Obtener lista de opciones para un combo */
+	public function ObtenerTodos()
+	{
+		$lItems = $this->ObtenerPagina(0, 1, "Nombre", "ASC", null);
+		foreach ($lItems as $lItem)
+		{
+			$lRes[] = new DatosCombo($lItem->Id, $lItem->Nombre);
+		}
+
+		return json_encode($lRes);
+	}
+	public function ObtenerTodosTexto()
+	{
+		$lItems = $this->ObtenerPagina(0, 1, "Nombre", "ASC", null);
+			
+		foreach ($lItems as $lItem)
+		{
+			$lRes[] = new DatosCombo($lItem->Nombre, $lItem->Nombre);
+		}
+
+		return json_encode($lRes);
+	}
+	/* Obtener lista de opciones para un combo */
+	
 	/* Metodos auxiliares */
 	public function IsValid()
 	{

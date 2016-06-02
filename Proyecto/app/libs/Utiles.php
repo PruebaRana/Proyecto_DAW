@@ -34,6 +34,10 @@ function obtenURLController($controller, $accion)
 {
 	return FrontController::getURL($controller, $accion);
 }
+function obtenURLRaiz($controller, $accion)
+{
+	return FrontController::getURL($controller, $accion);
+}
 // Funciones para montar URL
 
 

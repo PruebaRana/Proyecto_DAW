@@ -142,6 +142,39 @@ class UsuarioModel extends ModelBase
 		return $lCad;
 	}
 
+
+	/* Obtener lista de opciones para un combo */
+	public function ObtenerTodosAlumnos()
+	{
+		$WherePDO = new WherePDO();
+		$WherePDO->Where = "b.roles like '%Alumno%' AND a.Activo=1";
+		$WherePDO->ArrayWhere = array();
+
+		$lItems = $this->_db->UsuariosObtenerTodos($WherePDO, "Nombre", "ASC");
+		foreach ($lItems as $lItem)
+		{
+			$lRes[] = new DatosCombo($lItem->Id, $lItem->Nombre);
+		}
+
+		return json_encode($lRes);
+	}
+	public function ObtenerTodosProfesores()
+	{
+		$WherePDO = new WherePDO();
+		$WherePDO->Where = "b.roles like '%Profesor%' AND a.Activo=1";
+		$WherePDO->ArrayWhere = array();
+
+		$lItems = $this->_db->UsuariosObtenerTodos($WherePDO, "Nombre", "ASC");
+		foreach ($lItems as $lItem)
+		{
+			$lRes[] = new DatosCombo($lItem->Id, $lItem->Nombre);
+		}
+
+		return json_encode($lRes);
+	}
+	/* Obtener lista de opciones para un combo */
+
+	
 }
 
 ?>

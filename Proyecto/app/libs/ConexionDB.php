@@ -775,6 +775,79 @@ die;
 	// BLOQUE Modulos
 	
 	// BLOQUE Usuarios
+	public function UsuariosObtenerTodos($asWhere = array(), $asCampoOrdenacion = "", $asTipoOrdenacion = "")
+	{
+		$lList = array();
+		$_PreparePDO = null;
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			$lsSort = " ORDER BY ";
+			
+			$validColumns = array( "usuario", "nombre", "email", "fecha_alta", "activo", "roles" );
+			$campoOrdenacion = strtolower($asCampoOrdenacion);
+			if(in_array($campoOrdenacion, $validColumns))
+			{
+				if($campoOrdenacion == "roles"){
+					$lsSort .= "b.roles";
+				}
+				else{
+					$lsSort .= "a.".$asCampoOrdenacion;
+				}
+			}
+			else
+			{
+				$lsSort .= "a.Nombre";
+			}
+			$lsSort .= $this->ObtenOrder($asTipoOrdenacion);
+			
+			// Ojo, tenemos que procesar el asWhere para obtener un array de valores
+			// y asi usar la parametrizacion de PDO
+			
+			$lsSQL = "SELECT A.Id, A.Usuario, A.clave, A.Nombre, A.Email, A.fecha_alta, A.foto, A.activo, A.borrado, B.Roles FROM Usuarios A LEFT JOIN ";
+			$lsSQL .= "(SELECT A.idusuario, GROUP_CONCAT(b.nombre SEPARATOR ', ') AS Roles FROM usuariosroles A left join roles B on A.idrol = b. id GROUP BY A.idusuario) B ON A.Id = B.IdUsuario";
+			
+			$lsSQL .= " WHERE A.Borrado=0";
+			
+			if (Count($asWhere) > 0)
+			{
+				$lsSQL .= " AND ".$asWhere->Where;
+				$_PreparePDO = $asWhere->ArrayWhere;
+			}
+			$lsSQL .= $lsSort.";";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute($_PreparePDO);
+
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new UsuarioModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->Usuario = sanitizar(obtenParametroArray($valor, "usuario"));
+					$Item->Clave = sanitizar(obtenParametroArray($valor, "clave"));
+					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
+					$Item->EMail = sanitizar(obtenParametroArray($valor, "email"));
+					$Item->Fecha_Alta = sanitizar(obtenParametroArray($valor, "fecha_alta"));
+					$Item->Foto = sanitizar(obtenParametroArray($valor, "foto"));
+					$Item->Activo = ConexionBD::ObtenerSioNo(sanitizar(obtenParametroArray($valor, "activo")));
+					$Item->Borrado = ConexionBD::ObtenerSioNo(sanitizar(obtenParametroArray($valor, "borrado")));
+					// Y los roles por determinar
+					$Item->Roles = sanitizar(obtenParametroArray($valor, "roles"));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
+
+		return $lList;
+	}
+
 	public function UsuariosObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
 	{
 		$lList = array();
@@ -812,8 +885,6 @@ die;
 			$lsSQL .= " WHERE A.Borrado=0";
 			
 			// No es admin
-//echo var_dump($this);
-//die;			
 			if(!$this->_Config->get('Usuario')->isInRol("Administrador")){
 				$lsSQL .= " AND B.Roles like '%Alumno%'";
 			}
@@ -973,6 +1044,248 @@ die;
 	}
 	// BLOQUE Usuarios
 
+	// BLOQUE Proyectos
+	public function ProyectosObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
+	{
+		$lList = array();
+		$_PreparePDO = null;
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			$lsSort = " ORDER BY ";
+			$lsLimit = $this->ObtenLimit($aiPaginaActual, $aiItemsPorPagina);
+			
+			$validColumns = array( "id", "titulo", "alumno", "tutor", "fecha", "curso", "ciclo", "grupo", "valoracion", "modulos", "cualidades" );
+			$campoOrdenacion = strtolower($asCampoOrdenacion);
+			if(in_array($campoOrdenacion, $validColumns))
+			{
+				if($campoOrdenacion == "alumno"){
+					$lsSort .= "b.nombre";
+				}
+				else if($campoOrdenacion == "tutor"){
+					$lsSort .= "c.nombre";
+				}
+				else if($campoOrdenacion == "modulos"){
+					//$lsSort .= "c.nombre";
+				}
+				else if($campoOrdenacion == "cualidades"){
+					//$lsSort .= "c.nombre";
+				}
+				else
+				{
+					$lsSort .= "a.".$asCampoOrdenacion;
+				}
+			}
+			else
+			{
+				$lsSort .= "a.titulo";
+			}
+			$lsSort .= $this->ObtenOrder($asTipoOrdenacion);
+			
+			// Ojo, tenemos que procesar el asWhere para obtener un array de valores
+			// y asi usar la parametrizacion de PDO
+			
+			$lsSQL = "SELECT A.Id, A.Titulo, A.Fecha, A.IdAlumno, B.Nombre as Alumno, A.IdTutor, C.Nombre as Tutor, A.Curso, A.Ciclo, A.Grupo, A.Resumen, A.Herramientas,";
+			$lsSQL .= " A.Comentarios, A.Valoracion, A.Borrado, D.Cualidades, E.Modulos, D.idCualidades, E.idModulos";
+			$lsSQL .= " FROM proyectos A";
+			$lsSQL .= " LEFT JOIN Usuarios B ON A.IdAlumno = B.Id"; 
+			$lsSQL .= " LEFT JOIN Usuarios C ON A.IdTutor = C.Id"; 
+			$lsSQL .= " LEFT JOIN (SELECT A.idproyecto, GROUP_CONCAT(b.id SEPARATOR ',') AS idCualidades, GROUP_CONCAT(b.nombre SEPARATOR ',') AS Cualidades FROM ProyectosCualidades A left join Cualidades B on A.idCualidad = b.id GROUP BY A.idProyecto) D ON D.IdProyecto = A.Id";
+			$lsSQL .= " LEFT JOIN (SELECT A.idproyecto, GROUP_CONCAT(b.id SEPARATOR ',') AS idModulos, GROUP_CONCAT(b.nombre SEPARATOR ',') AS Modulos FROM ProyectosModulos A left join Modulos B on A.idModulo = b.id GROUP BY A.idProyecto) E ON E.IdProyecto = A.Id";
+			
+			$lsSQL .= " WHERE A.Borrado=0";
+			
+			if (Count($asWhere) > 0)
+			{
+				$lsSQL .= " AND ".$asWhere->Where;
+				$_PreparePDO = $asWhere->ArrayWhere;
+			}
+			$lsSQL .= $lsSort.$lsLimit.";";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute($_PreparePDO);
+
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new ProyectoModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->IdAlumno = sanitizar(obtenParametroArray($valor, "idalumno"));
+					$Item->Alumno = sanitizar(obtenParametroArray($valor, "alumno"));
+					$Item->IdTutor = sanitizar(obtenParametroArray($valor, "idtutor"));
+					$Item->Tutor = sanitizar(obtenParametroArray($valor, "tutor"));
+					$Item->Titulo = sanitizar(obtenParametroArray($valor, "titulo"));
+					$Item->Fecha = sanitizar(obtenParametroArray($valor, "fecha"));
+					$Item->Curso = sanitizar(obtenParametroArray($valor, "curso"));
+					$Item->Ciclo = sanitizar(obtenParametroArray($valor, "ciclo"));
+					$Item->Grupo = sanitizar(obtenParametroArray($valor, "grupo"));
+					$Item->Resumen = sanitizar(obtenParametroArray($valor, "resumen"), true);
+					$Item->Herramientas = sanitizar(obtenParametroArray($valor, "herramientas"), true);
+					$Item->Comentarios = sanitizar(obtenParametroArray($valor, "comentarios"), true);
+					$Item->Valoracion = sanitizar(obtenParametroArray($valor, "valoracion"));
+					// 
+					$Item->Cualidades = sanitizar(obtenParametroArray($valor, "cualidades"));
+					$Item->IdCualidades = sanitizar(obtenParametroArray($valor, "idcualidades"));
+					$Item->Modulos = sanitizar(obtenParametroArray($valor, "modulos"));
+					$Item->IdModulos = sanitizar(obtenParametroArray($valor, "idmodulos"));
+					$Item->Borrado = ConexionBD::ObtenerSioNo(sanitizar(obtenParametroArray($valor, "borrado")));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
+
+		return $lList;
+	}
+
+	public function ProyectosCount($asWhere = array())
+	{
+		$liId = -1;
+		$_PreparePDO = null;
+		// Preparamos la SQL
+		$lsSQL = "SELECT Count(1) as Cantidad";
+		$lsSQL .= " FROM proyectos A";
+		$lsSQL .= " LEFT JOIN Usuarios B ON A.IdAlumno = B.Id"; 
+		$lsSQL .= " LEFT JOIN Usuarios C ON A.IdTutor = C.Id"; 
+		$lsSQL .= " LEFT JOIN (SELECT A.idproyecto, GROUP_CONCAT(b.nombre SEPARATOR ',') AS Cualidades FROM ProyectosCualidades A left join Cualidades B on A.idCualidad = b.id GROUP BY A.idProyecto) D ON D.IdProyecto = A.Id";
+		$lsSQL .= " LEFT JOIN (SELECT A.idproyecto, GROUP_CONCAT(b.nombre SEPARATOR ',') AS Modulos FROM ProyectosModulos A left join Modulos B on A.idModulo = b.id GROUP BY A.idProyecto) E ON E.IdProyecto = A.Id";
+
+		if (Count($asWhere) > 0)
+		{
+			$lsSQL .= " WHERE ".$asWhere->Where;
+			$_PreparePDO = $asWhere->ArrayWhere;
+		}
+		$lsSQL .= "";
+		
+		// Obtenemos el resultado del count
+		$result = $this->prepare($lsSQL);
+		$result->execute($_PreparePDO);
+		$cuenta = $result->rowCount();
+		if ($result && $result->rowCount()>0) {
+			$row = $result->fetch();
+			$liId = obtenParametroArray($row, "Cantidad");
+		}
+		return $liId;
+	}
+
+	public function ProyectosItem($aiId)
+	{
+		$Item = null;
+		// Montamos el WherePDO para obtener este Id
+		$lWherePDO = new WherePDO();
+		$lWherePDO->Where = "a.id=:id";
+		$lWherePDO->ArrayWhere = array(":id" => $aiId);
+		
+		$lResultados = $this->ProyectosObtenerPagina($lWherePDO);
+		if($lResultados != null && Count($lResultados) > 0)
+		{
+			$Item = $lResultados[0];
+		}
+
+		return $Item;
+	}
+	
+	public function ProyectosAñadir($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "INSERT INTO Proyectos (Titulo, IdAlumno, IdTutor, Curso, Ciclo, Grupo, Resumen, Herramientas, Comentarios, Valoracion)";
+			$lsSQL .= " VALUES (:Titulo, :IdAlumno, :IdTutor, :Curso, :Ciclo, :Grupo, :Resumen, :Herramientas, :Comentarios, :Valoracion);";
+			$lArray = array(":Titulo" => $aItem->Titulo, ":IdAlumno" => $aItem->IdAlumno, ":IdTutor" =>$aItem->IdTutor, ":Curso" =>$aItem->Curso, ":Ciclo" =>$aItem->Ciclo, ":Grupo" =>$aItem->Grupo, ":Resumen" =>$aItem->Resumen, ":Herramientas" =>$aItem->Herramientas, ":Comentarios" =>$aItem->Comentarios, ":Valoracion" =>$aItem->Valoracion );
+
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+			//Eliminar los roles de este usuario y asignar los nuevos
+			$aItem->Id = $this->lastInsertId();
+			$this->ProyectosAsignarCualidades($aItem->Id, $aItem->Cualidades) + $this->ProyectosAsignarModulos($aItem->Id, $aItem->Modulos);
+			
+		}
+		return $liRes;
+	}
+    
+	public function ProyectosModificar($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "UPDATE Proyectos SET Titulo=:Titulo, IdAlumno=:IdAlumno, IdTutor=:IdTutor, Curso=:Curso, Ciclo=:Ciclo, Grupo=:Grupo, Resumen=:Resumen, Herramientas=:Herramientas, Comentarios=:Comentarios, Valoracion=:Valoracion WHERE ID=:Id ";
+			$lArray = array(":Titulo" => $aItem->Titulo, ":IdAlumno" => $aItem->IdAlumno, ":IdTutor" => $aItem->IdTutor, ":Curso" => $aItem->Curso, ":Ciclo" => $aItem->Ciclo, ":Grupo" => $aItem->Grupo, ":Resumen" => $aItem->Resumen, ":Herramientas" => $aItem->Herramientas, ":Comentarios" => $aItem->Comentarios, ":Valoracion" => $aItem->Valoracion, ":Id" => $aItem->Id);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+
+			//Eliminar los roles de este usuario y asignar los nuevos
+			$liRes = $result->rowCount() + $this->ProyectosAsignarCualidades($aItem->Id, $aItem->Cualidades) + $this->ProyectosAsignarModulos($aItem->Id, $aItem->Modulos);
+		}
+		return $liRes;
+	}
+
+	public function ProyectosEliminar($aiId = 0)
+	{
+		$liRes = 0;
+		if($aiId > 0)
+		{
+			$lsSQL = "UPDATE Proyectos SET Borrado=1 WHERE ID=:Id ";
+			$lArray = array(":Id" => $aiId);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+
+	
+	public function ProyectosAsignarCualidades($aiId = 0, $asCualidades = "")
+	{
+		$liRes = 0;
+		if($aiId > 0)
+		{
+			// Eliminamos 
+			$lsSQL = "DELETE FROM ProyectosCualidades WHERE IdProyecto=:IdProyecto";
+			$lArray = array(":IdProyecto" => $aiId);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+
+			// Ahora obtenemos la lista de ids 
+			$lsSQL = "INSERT INTO ProyectosCualidades (IdProyecto, IdCualidad) SELECT $aiId, id FROM Cualidades where FIND_IN_SET(id, :Cualidades)";
+			$lArray = array(":Cualidades" => $asCualidades);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+	public function ProyectosAsignarModulos($aiId = 0, $asModulos = "")
+	{
+		$liRes = 0;
+		if($aiId > 0)
+		{
+			// Eliminamos 
+			$lsSQL = "DELETE FROM ProyectosModulos WHERE IdProyecto=:IdProyecto";
+			$lArray = array(":IdProyecto" => $aiId);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			// Ahora obtenemos la lista de ids 
+			$lsSQL = "INSERT INTO ProyectosModulos (IdProyecto, IdModulo) SELECT $aiId, id FROM Modulos where FIND_IN_SET(id, :Modulos)";
+			$lArray = array(":Modulos" => $asModulos);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+	// BLOQUE Proyectos
 	
 	// usados por la propia clase para obtener el order y el limit en las select
 	private function ObtenOrder($asOrder = "")
