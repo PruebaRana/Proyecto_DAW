@@ -24,6 +24,8 @@ class ConexionBD extends PDO
 		self::$instance->_Config = $config;
         return self::$instance;
     }
+	
+	
 	// BLOQUE Utiles
 	public static function ObtenerSioNo($asTexto){
 		$asTexto = strtolower($asTexto);
@@ -1301,6 +1303,7 @@ die;
 			$lsSQL .= " WHERE Nombre ='".$asPlantilla."'";
 			$lsSQL = strtolower($lsSQL);
 			$result = $this->prepare($lsSQL);
+
 			$result->execute();
 		
 			$cuenta = $result->rowCount();
@@ -1309,8 +1312,8 @@ die;
 					$Item = new PlantillaCorreoModel();
 					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
 					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
-					$Item->Asunto = sanitizar(obtenParametroArray($valor, "asunto"));
-					$Item->Descripcion = sanitizar(obtenParametroArray($valor, "descripcion"));
+					$Item->Asunto = sanitizar(obtenParametroArray($valor, "asunto"),true);
+					$Item->Descripcion = obtenParametroArray($valor, "descripcion");
 					$lList[] = $Item;
 				}
 			}

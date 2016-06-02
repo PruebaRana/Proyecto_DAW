@@ -1,5 +1,5 @@
 <?php
-function EnviarCorreo($asAsunto, $asContenido, $asFrom, $asFromName){
+function EnviarCorreo($asContenido, $asAsunto, $asFrom, $asFromName){
 	$config = Config::GetInstance();
 	require ($config->get('Ruta')."app/libs/class.phpmailer.php");
 	require ($config->get('Ruta')."app/libs/class.smtp.php");
@@ -8,7 +8,6 @@ function EnviarCorreo($asAsunto, $asContenido, $asFrom, $asFromName){
 
 	$body = $asContenido;
 
-	$mail->IsSMTP();
 	/* Sustituye (ServidorDeCorreoSMTP)  por el host de tu servidor de correo SMTP*/
 	$mail->Host = $config->get('CorreoHost');
 	/* Codificacion utf8*/
@@ -21,6 +20,10 @@ function EnviarCorreo($asAsunto, $asContenido, $asFrom, $asFromName){
 	$mail->Subject = $asAsunto;
 	$mail->AltBody = $asAsunto;
 	$mail->MsgHTML($body);
+	$mail->IsSMTP(true);
+	
+	//$mail->Body = $body;
+	//$mail->IsHTML(true);
 
 	$mail->AddAddress($asFrom, $asFromName);
 	$mail->SMTPAuth = true;
@@ -31,9 +34,9 @@ function EnviarCorreo($asAsunto, $asContenido, $asFrom, $asFromName){
 
 	$lres = "";
 	if(!$mail->Send()) {
-		$lres = "Mailer Error:".$mail->ErrorInfo;
+		$lres = "Error:".$mail->ErrorInfo;
 	} else {
-		$lres = "Message sent!";
+		$lres = "Ok";
 	}
 	return $lres;
 }

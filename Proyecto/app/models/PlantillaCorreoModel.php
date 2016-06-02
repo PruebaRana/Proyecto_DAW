@@ -11,9 +11,10 @@ class PlantillaCorreoModel extends ModelBase
 	/* Propiedades */
 	
 	/* Magicos, contructor destructor acceso y seteo */
-    public function __construct()
-    {
-    }
+    //public function __construct()
+    //{
+	//	parent::__construct();
+    //}
 	/* Magicos, contructor destructor acceso y seteo */
 
 	

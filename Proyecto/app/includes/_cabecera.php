@@ -36,7 +36,7 @@ if ($usuario->Id == 0) {
 		</ul>
 					
 		<ul id="login">
-			<li><a href="<?php echo FrontController::getURL("Perfil", "indice"); ?>"><?php echo $usuario->Nombre; ?></a></li>
+			<li><a href="#"><?php echo $usuario->Nombre; ?></a></li>
 			<li><a href="<?php echo FrontController::getURL("Autentificacion", "logoff"); ?>"><i class="fa fa-power-off"></i> Salir</a></li>
 		</ul>
 	</nav>

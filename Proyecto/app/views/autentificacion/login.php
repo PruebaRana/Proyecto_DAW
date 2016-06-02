@@ -11,6 +11,7 @@
 		<input autocomplete="off" id="Pass" name="Pass" placeholder="Contraseña" type="password" value="" />
 		<input id="Password" name="Password" type="hidden" value="" />
 		<input type="submit" class="button button-rounded button-primary button-large Tcen" value="Entrar al sistema" />
+		<a href="<?php echo FrontController::getURL("autentificacion", "recordar"); ?>">¿Olvido su contraseña?</a>
 	</form>
 </div>
 

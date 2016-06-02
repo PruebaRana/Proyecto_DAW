@@ -18,6 +18,14 @@ class Config
         $this->vars = array();
     }
  
+    public static function GetInstance()
+    {
+        if (!isset(self::$instance)) {
+            $c = __CLASS__;
+            self::$instance = new $c;
+        }
+        return self::$instance;
+    }
     //Con set vamos guardando nuestras variables.
     public function set($name, $value)
     {
@@ -34,15 +42,6 @@ class Config
         {
             return $this->vars[$name];
         }
-    }
- 
-    public static function GetInstance()
-    {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
-        }
-        return self::$instance;
     }
 }
 ?>
