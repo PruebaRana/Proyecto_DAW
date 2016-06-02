@@ -1286,6 +1286,45 @@ die;
 		return $liRes;
 	}
 	// BLOQUE Proyectos
+
+
+	// BLOQUE PlantillaCorreo
+	public function PlantillaCorreoObtenerPlantilla($asPlantilla = "")
+	{
+		$lList = array();
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			// y asi usar la parametrizacion de PDO
+			$lsSQL = "SELECT Id, Nombre, Asunto, Descripcion FROM PlantillasCorreo";
+			$lsSQL .= " WHERE Nombre ='".$asPlantilla."'";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute();
+		
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new PlantillaCorreoModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
+					$Item->Asunto = sanitizar(obtenParametroArray($valor, "asunto"));
+					$Item->Descripcion = sanitizar(obtenParametroArray($valor, "descripcion"));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
+
+		return $lList;
+	}
+	// BLOQUE PlantillaCorreo
+
 	
 	// usados por la propia clase para obtener el order y el limit en las select
 	private function ObtenOrder($asOrder = "")

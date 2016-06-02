@@ -14,7 +14,6 @@ class LogonModel extends ModelBase
 		parent::__construct();
     }
 	*/
- 
 	public function ComprobarUserPass($asUsuario, $asClave) {
 		$res = null;
 
@@ -55,6 +54,7 @@ class LogonModel extends ModelBase
 			}
 		}
 	}
+	
 	
 }
 

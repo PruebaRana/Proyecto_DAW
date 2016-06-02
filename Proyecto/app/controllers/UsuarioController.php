@@ -232,7 +232,6 @@ class UsuarioController extends ControllerBase
 	/* Accion BORRAR */
 
 	
-	
 	// Este método instanciara el modelo cargándolo con los datos que viene por POST
 	private function ObtenNewModel($asWhereCampo = null, $asWhereValor = null)
 	{
