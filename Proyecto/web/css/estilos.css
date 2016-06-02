@@ -83,7 +83,7 @@ P{margin:0 0 .5em}
 /*---------------------------------------------------------
 			FORMULARIOS
 -----------------------------------------------------------*/
-input[type=text], input[type=date], input[type=datetime], input[type=tel], input[type=email], input[type=password], textarea {border-width:1px;border-style:solid;padding:.1em .3em;font-weight:lighter;margin:0 .3em 0 0;outline:none;border-radius:0;box-sizing:border-box}
+input[type=text], input[type=date], input[type=datetime], input[type=tel], input[type=email], input[type=password], textarea {border-width:1px;border-style:solid;padding:.1em .3em;font-weight:lighter;margin:0 .3em 0 0;outline:none;border-radius:4px;box-sizing:border-box}
 input[type=text]:hover, input[type=date]:hover, input[type=datetime]:hover, input[type=tel]:hover, input[type=email]:hover, input[type=password]:hover, input[type=checkbox]:hover, textarea:hover {box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3)}
 input[type=text]:focus, input[type=date]:focus, input[type=datetime]:focus, input[type=tel]:focus, input[type=email]:focus, input[type=password]:focus, input[type=checkbox]:focus, textarea:focus {box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3)}
 
@@ -94,7 +94,11 @@ input:-moz-placeholder,input::-webkit-input-placeholder, input::-webkit-input-pl
 LABEL{position:relative;display:inline-block;text-align:right;margin:.2em .5em 0 0;width:25%;font-size:12px;font-weight:400}
 INPUT{height:27px}
 SELECT{font-size:0.9em}
-.divinput{margin:.5em 0;width:100%}
+.divinput{margin:.5em 0 1rem;width:100%}
+.divinput50{margin:.5em 0 1rem;width:50%}
+.divinput25{margin:.5em 0 1rem;width:25%}
+.divinput20{margin:.5em 0 1rem;width:20%}
+.divinput15{margin:.5em 0 1rem;width:15%}
 em{display:none !important;height:0;width:0}
 em.error{color:red}
 em.ok{color:green}

@@ -2,6 +2,7 @@
 class ConexionBD extends PDO
 {
     private static $instance = null;
+    private static $_Config = null;
     public function __construct()
     {
         $config = Config::GetInstance();
@@ -16,9 +17,23 @@ class ConexionBD extends PDO
         if( self::$instance == null )
         {
             self::$instance = new self();
+			
         }
+
+        $config = Config::GetInstance();
+		self::$instance->_Config = $config;
         return self::$instance;
     }
+	// BLOQUE Utiles
+	public static function ObtenerSioNo($asTexto){
+		$asTexto = strtolower($asTexto);
+		$lsRes = 0;
+		if($asTexto == "si" || $asTexto == "yes" || $asTexto == "ok" || $asTexto == "true" || $asTexto == "1"){
+			$lsRes = 1;
+		}
+		return $lsRes;
+	}
+	// BLOQUE Utiles
 	
 	// BLOQUE Valoraciones
 	public function ValoracionesObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
@@ -719,11 +734,7 @@ die;
 			$lsSQL = "INSERT INTO Modulos (IdCiclo, Nombre, Descripcion)";
 			$lsSQL .= " VALUES (:IdCiclo,:Nombre,:Descripcion);";
 			$lArray = array(":IdCiclo" => $aItem->IdCiclo, ":Nombre" =>$aItem->Nombre, ":Descripcion" =>$aItem->Descripcion );
-/*
-echo "SQL: ".$lsSQL."<br>";
-echo "p: ".var_dump($lArray)."<br>";			
-die;
-*/
+
 			$result = $this->prepare($lsSQL);
 			$result->execute($lArray);
 			
@@ -763,6 +774,205 @@ die;
 	}
 	// BLOQUE Modulos
 	
+	// BLOQUE Usuarios
+	public function UsuariosObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
+	{
+		$lList = array();
+		$_PreparePDO = null;
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			$lsSort = " ORDER BY ";
+			$lsLimit = $this->ObtenLimit($aiPaginaActual, $aiItemsPorPagina);
+			
+			$validColumns = array( "usuario", "nombre", "email", "fecha_alta", "activo", "roles" );
+			$campoOrdenacion = strtolower($asCampoOrdenacion);
+			if(in_array($campoOrdenacion, $validColumns))
+			{
+				if($campoOrdenacion == "roles"){
+					$lsSort .= "b.roles";
+				}
+				else{
+					$lsSort .= "a.".$asCampoOrdenacion;
+				}
+			}
+			else
+			{
+				$lsSort .= "a.Nombre";
+			}
+			$lsSort .= $this->ObtenOrder($asTipoOrdenacion);
+			
+			// Ojo, tenemos que procesar el asWhere para obtener un array de valores
+			// y asi usar la parametrizacion de PDO
+			
+			$lsSQL = "SELECT A.Id, A.Usuario, A.clave, A.Nombre, A.Email, A.fecha_alta, A.foto, A.activo, A.borrado, B.Roles FROM Usuarios A LEFT JOIN ";
+			$lsSQL .= "(SELECT A.idusuario, GROUP_CONCAT(b.nombre SEPARATOR ', ') AS Roles FROM usuariosroles A left join roles B on A.idrol = b. id GROUP BY A.idusuario) B ON A.Id = B.IdUsuario";
+			
+			$lsSQL .= " WHERE A.Borrado=0";
+			
+			// No es admin
+//echo var_dump($this);
+//die;			
+			if(!$this->_Config->get('Usuario')->isInRol("Administrador")){
+				$lsSQL .= " AND B.Roles like '%Alumno%'";
+			}
+			
+			if (Count($asWhere) > 0)
+			{
+				$lsSQL .= " AND ".$asWhere->Where;
+				$_PreparePDO = $asWhere->ArrayWhere;
+			}
+			$lsSQL .= $lsSort.$lsLimit.";";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute($_PreparePDO);
+
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new UsuarioModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->Usuario = sanitizar(obtenParametroArray($valor, "usuario"));
+					$Item->Clave = sanitizar(obtenParametroArray($valor, "clave"));
+					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
+					$Item->EMail = sanitizar(obtenParametroArray($valor, "email"));
+					$Item->Fecha_Alta = sanitizar(obtenParametroArray($valor, "fecha_alta"));
+					$Item->Foto = sanitizar(obtenParametroArray($valor, "foto"));
+					$Item->Activo = ConexionBD::ObtenerSioNo(sanitizar(obtenParametroArray($valor, "activo")));
+					$Item->Borrado = ConexionBD::ObtenerSioNo(sanitizar(obtenParametroArray($valor, "borrado")));
+					// Y los roles por determinar
+					$Item->Roles = sanitizar(obtenParametroArray($valor, "roles"));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
+
+		return $lList;
+	}
+
+	public function UsuariosCount($asWhere = array())
+	{
+		$liId = -1;
+		$_PreparePDO = null;
+		// Preparamos la SQL
+		$lsSQL = "Select Count(1) as Cantidad FROM Usuarios A ";
+		if (Count($asWhere) > 0)
+		{
+			$lsSQL .= " WHERE ".$asWhere->Where;
+			$_PreparePDO = $asWhere->ArrayWhere;
+		}
+		$lsSQL .= "";
+		
+		// Obtenemos el resultado del count
+		$result = $this->prepare($lsSQL);
+		$result->execute($_PreparePDO);
+		$cuenta = $result->rowCount();
+		if ($result && $result->rowCount()>0) {
+			$row = $result->fetch();
+			$liId = obtenParametroArray($row, "Cantidad");
+		}
+		return $liId;
+	}
+
+	public function UsuariosItem($aiId)
+	{
+		$Item = null;
+		// Montamos el WherePDO para obtener este Id
+		$lWherePDO = new WherePDO();
+		$lWherePDO->Where = "a.id=:id";
+		$lWherePDO->ArrayWhere = array(":id" => $aiId);
+		
+		$lResultados = $this->UsuariosObtenerPagina($lWherePDO);
+		if($lResultados != null && Count($lResultados) > 0)
+		{
+			$Item = $lResultados[0];
+		}
+
+		return $Item;
+	}
+	
+	public function UsuariosAñadir($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "INSERT INTO Usuarios (Usuario, Clave, Nombre, EMail)";
+			$lsSQL .= " VALUES (:Usuario,:Clave,:Nombre,:EMail);";
+			$lArray = array(":Usuario" => $aItem->Usuario, ":Clave" => md5(getToken(10)), ":Nombre" =>$aItem->Nombre, ":EMail" =>$aItem->EMail );
+
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+			//Eliminar los roles de este usuario y asignar los nuevos
+			$this->UsuariosAsignarRoles($this->lastInsertId(), $aItem->Roles);
+			
+		}
+		return $liRes;
+	}
+    
+	public function UsuariosModificar($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "UPDATE Usuarios SET Usuario=:Usuario, Nombre=:Nombre, EMail=:EMail, Activo=b'$aItem->Activo' WHERE ID=:Id ";
+			$lArray = array(":Usuario" => $aItem->Usuario, ":Nombre" => $aItem->Nombre, ":EMail" => $aItem->EMail, ":Id" => $aItem->Id);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+
+			//Eliminar los roles de este usuario y asignar los nuevos
+			$liRes = $result->rowCount() + $this->UsuariosAsignarRoles($aItem->Id, $aItem->Roles);
+		}
+		return $liRes;
+	}
+
+	public function UsuariosEliminar($aiId = 0)
+	{
+		$liRes = 0;
+		if($aiId > 0)
+		{
+			$lsSQL = "UPDATE Usuarios SET Borrado=1 WHERE ID=:Id ";
+			$lArray = array(":Id" => $aiId);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+
+	public function UsuariosAsignarRoles($aiIdUser = 0, $asRoles = "")
+	{
+		$liRes = 0;
+		if($aiIdUser > 0)
+		{
+			// Eliminamos sus roles
+			$lsSQL = "DELETE FROM usuariosRoles WHERE IdUsuario=:IdUsuario";
+			$lArray = array(":IdUsuario" => $aiIdUser);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			// Ahora obtenemos la lista de ids de los roles
+			//$lsLista = explode(",", $asRoles);
+			//$lsSQL = "SELECT nombre FROM roles where nombre in (:Roles)";
+			$lsSQL = "INSERT INTO usuariosRoles (IdUsuario, IdRol) SELECT $aiIdUser, id FROM roles where FIND_IN_SET(nombre, :Roles)";
+			$lArray = array(":Roles" => $asRoles);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+	// BLOQUE Usuarios
+
 	
 	// usados por la propia clase para obtener el order y el limit en las select
 	private function ObtenOrder($asOrder = "")

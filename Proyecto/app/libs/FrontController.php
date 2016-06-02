@@ -44,6 +44,7 @@ class FrontController
 		// Nos guardamos en el config la URL y la Ruta base.
 		$config->set('URL', $lsURL);
 		$config->set('Ruta', $lsRuta);
+		$config->set('Usuario', $usuario);
         $controllerPath = $lsRuta.$config->get('controllersFolder').$controllerName.'.php';
         
 		// Incluimos el fichero que contiene nuestra clase controladora solicitada
