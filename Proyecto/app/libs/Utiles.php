@@ -109,6 +109,9 @@ function normaliza ($cadena){
     return utf8_encode($cadena);
 }
 // OJO: No usar mb_strtolower, destroza acentos
+function capitalizar ($cadena){
+	return mb_strtoupper($cadena);
+}
 function capitalizarPalabras ($cadena){
 	return ucwords(mb_strtolower($cadena));
 }

@@ -21,8 +21,11 @@ function executeSqlScript($_db, $_fileName) {
 			if($tokens[$i] == $curDelimiter || substr(trim($tokens[$i]), -1*(strlen($curDelimiter))) == $curDelimiter) { 
 				// Si terminamos el parseo ejecuto la consulta
 				$query .= str_replace($curDelimiter, '', $tokens[$i]); // Elimino el delimitador
-				//echo $query."<br><br>";
-				$_db->query($query);
+				
+				// echo $query."<br><br>";
+				$result = $_db->prepare($query);
+				$result->execute();
+				
 				$query = ""; // Preparo la consulta para continuar con la siguiente sentencia
 				$tokens[$i] = '';
 				$inSentence = false;

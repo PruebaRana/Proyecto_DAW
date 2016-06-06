@@ -111,7 +111,7 @@ class CicloModel extends ModelBase
 
 	public function Sanitize()
 	{
-		$this->Nombre = capitalizarPalabras(sanitizar($this->Nombre));
+		$this->Nombre = capitalizar(sanitizar($this->Nombre));
 		$this->Descripcion = capitalizarPalabras(sanitizar($this->Descripcion));
 		
 		return $this;

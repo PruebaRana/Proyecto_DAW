@@ -17,9 +17,9 @@ $config->set('dbuser', 'proyecto_daw');
 $config->set('dbpass', '.Proyecto_Daw.13');
 
 // Datos de Configuracion del correo
-$config->set('CorreoHost', "");
-$config->set('CorreoUser', "");
-$config->set('CorreoPass', "");
+$config->set('CorreoHost', "mail.pymsolutions.com");
+$config->set('CorreoUser', "servicios@pymsolutions.com");
+$config->set('CorreoPass', "jaimeservicios33");
 
 // Para que el sistema monte URL amigables, se tiene que configurar el servidor web para que las procese.
 $config->set('urlFriendly', true);
