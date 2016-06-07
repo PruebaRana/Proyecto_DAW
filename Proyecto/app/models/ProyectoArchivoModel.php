@@ -92,7 +92,7 @@ class ProyectoArchivoModel extends ModelBase
 			$CarpetaFicheros = $config->get("Ruta").'app/contenidos/proyectos/';
 			checkCarpeta($CarpetaFicheros);
 			checkCarpeta($CarpetaFicheros.$this->IdProyecto);
-			$Nombrefichero = $this->IdProyecto.'/'.getToken(4)."_".$this->_File['name'];
+			$Nombrefichero = $this->IdProyecto.'/'.getToken(4)."_".normaliza($this->_File['name']);
 			$ficheroFinal = $CarpetaFicheros.$Nombrefichero;
 
 			if (move_uploaded_file($this->_File['tmp_name'], $ficheroFinal)) {
