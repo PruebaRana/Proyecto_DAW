@@ -90,7 +90,7 @@
 
 
 <div class="CapaBotonesForm">
-	<input name="Id" type="hidden" value="<?PHP echo($Model->Id); ?>">
+	<input id="returnUrl" name="returnUrl" type="hidden" value="<?PHP echo($returnUrl); ?>">
 	<?PHP echo obtenerHTMLHiddenAntiCSRF(); ?>
 	<input type="submit" class="button button-rounded button-primary" value="Guardar" data-loading-text="Enviando..." />&nbsp;&nbsp;
 	<input type="button" class="button button-rounded" value="Cancelar" onclick="javascript:Cerrar();" />

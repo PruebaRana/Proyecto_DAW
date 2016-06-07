@@ -39,6 +39,7 @@ class AutentificacionController extends ControllerBase
         //Pasamos a la vista toda la información que se desea representar
 		$data["Item"] = $item;
 		$data["mensaje"] = "";
+		//$data["returnUrl"] = $this->ObtenerPaginaRetorno();
  
         //Finalmente presentamos nuestra plantilla
         $this->view->show($this->_Nombre . "/login.php", $data);
@@ -61,6 +62,8 @@ class AutentificacionController extends ControllerBase
 			
 			$_SESSION["user"] = $usuario;
 			// Redirigir al indice
+			//$returnUrl = $this->ObtenerPaginaRetorno();
+
 			FrontController::redirect();
 		}
 		else
@@ -156,7 +159,7 @@ class AutentificacionController extends ControllerBase
 					// no se ha logueado.
 					$data["Item"] = $item;
 					$data["mensaje"] = "No se ha podido enviar el correo";
-
+					
 					//Finalmente presentamos nuestra plantilla
 					$this->view->show($this->_Nombre . "/recordar.php", $data);
 				}
@@ -350,6 +353,26 @@ class AutentificacionController extends ControllerBase
 		return EnviarCorreo($asContenido, $asAsunto, $asDestinatario, $asNombre);
 	}	
 	/* Envios de Correo */
-	
+
+	/* Metodos Auxiliares */
+	private function ObtenerPaginaRetorno()
+	{
+		$lsURL = obtenParametroArray($_GET, "returnUrl", null);
+		// Guardamos la URL a la que volver
+		if ($lsURL == null)
+		{
+			$Referer = obtenParametroArray($_SERVER, 'HTTP_REFERER', null);
+			if ($Referer != null && strpos($Referer, '/autentificacion/') !== false)
+			{
+				$lsURL = $Referer;
+			}
+			else
+			{
+				$lsURL = "";
+			}
+		}
+		return $lsURL;
+	}
+	/* Metodos Auxiliares */
 }
 ?>

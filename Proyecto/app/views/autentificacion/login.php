@@ -10,6 +10,8 @@
 		<input autocomplete="off" id="UserName" maxlength="10" name="UserName" placeholder="Usuario" type="text" value="" />
 		<input autocomplete="off" id="Pass" name="Pass" placeholder="Contraseña" type="password" value="" />
 		<input id="Password" name="Password" type="hidden" value="" />
+
+		<input id="returnUrl" name="returnUrl" type="hidden" value="<?PHP echo($returnUrl); ?>">
 		<input type="submit" class="button button-rounded button-primary button-large Tcen" value="Entrar al sistema" />
 		<a href="<?php echo FrontController::getURL("autentificacion", "recordar"); ?>">¿Olvido su contraseña?</a>
 	</form>
