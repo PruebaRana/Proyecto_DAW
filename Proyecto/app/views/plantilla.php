@@ -35,7 +35,18 @@
 		
 		<footer id="pie"><?php include($config->get('Ruta')."app/includes/_pie.php"); ?></footer>
 
+		<!--[if !IE]><!-->
 		<script src="<?php echo $config->get('URL'); ?>/js/jquery-2.2.4.min.js" type="text/javascript"></script>
+		<!--<![endif]-->
+		<!--[if gte IE 9]>
+		<script src="<?php echo $config->get('URL'); ?>/js/jquery-2.2.4.min.js" type="text/javascript"></script>
+		<![endif]-->
+		<!--[if IE 8]>
+		<script src="@Url.Content("~/Scripts/jquery-1.8.3.min.js")" type="text/javascript"></script>
+		<![endif]-->
+		<!--[if lt IE 8]>
+		<script src="@Url.Content("~/Scripts/jquery-1.8.3.min.js")" type="text/javascript"></script>
+		<![endif]-->
 		<script src="<?php echo $config->get('URL'); ?>/js/EasyUI/jquery.easyui.min.js" type="text/javascript"></script>
 		<script src="<?php echo $config->get('URL'); ?>/js/EasyUI/locale/easyui-lang-es.js" type="text/javascript"></script>
 		<script src="<?php echo $config->get('URL'); ?>/js/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>
