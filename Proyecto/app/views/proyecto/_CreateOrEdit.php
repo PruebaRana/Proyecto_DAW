@@ -31,7 +31,7 @@
 <div class="limpiar"></div>
 
 
-<div id="tabs" class="easyui-tabs" data-options="plain:false,border:true,fit:false,height:460">
+<div id="tabs" class="easyui-tabs" data-options="plain:false,border:true,fit:false,height:400">
 	<div title="General" class="tab">
 		<div class="divinput" style="margin: 9px 0 1rem;">
 			<label for="Fecha">Fecha</label>
@@ -68,19 +68,23 @@
 	</div>
 
 	<div title="Resumen" class="tab">
-		<textarea class="span10 tinymce" id="Resumen" name="Resumen" placeholder="Resumen del proyecto" rows="10"><?PHP echo($Model->Resumen); ?></textarea>
+		<textarea class="tinymce" height="370px" id="Resumen" name="Resumen" placeholder="Resumen del proyecto"><?PHP echo($Model->Resumen); ?></textarea>
 	</div>
 
 	<div title="Herramientas" class="tab">
-		<textarea class="span10 tinymce" id="Herramientas" name="Herramientas" placeholder="Herramientas y tecnologías del proyecto" rows="10"><?PHP echo($Model->Herramientas); ?></textarea>
+		<textarea class="tinymce" height="370px" id="Herramientas" name="Herramientas" placeholder="Herramientas y tecnologías del proyecto"><?PHP echo($Model->Herramientas); ?></textarea>
 	</div>
 
 	<div title="Comentarios" class="tab">
-		<textarea class="span10 tinymce" id="Comentarios" name="Comentarios" placeholder="Comentarios del proyecto" rows="10"><?PHP echo($Model->Comentarios); ?></textarea>
+		<textarea class="tinymce" height="370px" id="Comentarios" name="Comentarios" placeholder="Comentarios del proyecto"><?PHP echo($Model->Comentarios); ?></textarea>
 	</div>
 
 	<div title="Ficheros" class="tab">
-		
+		<?php if($Model->Id == 0) { ?>
+			<p>Guarde el proyecto y entre en edición para poder subir los ficheros adjuntos.</p>
+		<?php } else { ?>
+			<table id="dgFicheros"></table>
+		<?php } ?>
 	</div>
 </div>
 
@@ -92,7 +96,11 @@
 	<input type="button" class="button button-rounded" value="Cancelar" onclick="javascript:Cerrar();" />
 </div>
 
-
+<div style="display:none">
+	<div id="dlgAddFile" class="easyui-dialog form-horizontal" title="Añadir fichero" style="width:550px;height:220px;padding:10px" 
+		data-options="iconCls:'icon-save',resizable:false,modal:true,closed:true">
+	</div>
+</div>
 
 <script src="<?php echo $config->get('URL'); ?>/js/tinymce/jscripts/tiny_mce/jquery.tinymce.js" type="text/javascript"></script>
 <script>
@@ -134,10 +142,14 @@ $(document).ready(function () {
     $('.number').keypress(isNumberKey);
 
 	// Obligatorio cuando hay Tinymce junto con fichas del easyUI, sin esto el Tiny deja de funcionar bien
-	$('#tabs').tabs({ border: false, onSelect:function(title){
+	$('#tabs').tabs({ border: false,
+		onSelect:function(title){
+			if(title == "Ficheros")
+			{
+				dgFicheros();
+			}
 		}  
-	});
-	
+	});	
 	
 	$('#IdAlumno').combobox({
 		required: true,
@@ -222,13 +234,12 @@ $(document).ready(function () {
 		theme_advanced_buttons1: "bold,italic,underline,|,pastetext,pasteword,blockquote,|,strikethrough,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,undo,redo,|,link,unlink,|,image,|,preview,code",
 		theme_advanced_buttons2: "",
 
+		width: "100%",
+		height: "360px",
+
 		theme_advanced_toolbar_location: "top",
 		theme_advanced_toolbar_align: "left",
 		theme_advanced_statusbar_location: "bottom",
-		theme_advanced_resizing: true,
-
-		width: "90%",
-		height: "98%",
 
 		// Example content CSS (should be your site CSS)
 		content_css: '<?php echo $config->get('URL'); ?>/css/estilos.css',
@@ -237,10 +248,149 @@ $(document).ready(function () {
 	//Convert multiple combobox integer to string value START
 	$('#Cualidades').combobox('setValues', [<?PHP echo($Model->getCualidades()); ?>]);
 	$('#Modulos').combobox('setValues', [<?PHP echo($Model->getModulos()); ?>]);
-	
     
     // Inicia
     Inicia();
+
 });
+
+function dgFicheros(){
+	//Inicializo el grid de ficheros
+	$('#dgFicheros').datagrid({
+		url: '<?php echo(obtenURLController("ProyectoArchivo", "ObtenerDatos")); ?>',
+		queryParams: {
+			whereCampo: 'IdProyecto',
+			whereValor: '<?php echo $Model->Id ?>'
+		},
+		autoRowHeight: false,
+		fit: true,
+		fitColumns: true,
+		singleSelect: true,
+		pagination: true,
+		rownumbers: false,
+		scrollbarSize: 0,
+		loadMsg: '',
+		pagePosition: 'bottom',
+		sortName: 'Fecha',
+		sortOrder: 'desc',
+		remoteSort: true,
+		pageList: [10, 15, 20],
+		pageSize: 10,
+		striped: true,
+		columns: [[
+			{ field: 'Id', title: 'Id', width: 0, hidden: 'true' },
+			{ field: 'IdProyecto', title: 'IdProyecto', width: 0, hidden: 'true' },
+			{ field: 'Tipo', title: 'Tipo', width: 100, sortable: 'true'},
+			{ field: 'Ruta', title: 'Ruta', width: 400, sortable: 'true',
+				formatter: function (value, row, index) {
+					if (value.length > 0)
+					{
+						return '<a href="<?php echo $config->get("URL")."/proyectos/" ?>' + value + '" target=_blank><i class="bicon-file" title="' + value + '"></i>' + value + '</a>';
+					} else {
+						return "";
+					}
+				} 
+			
+			
+			}
+		]],
+		idField: 'Id',
+		onHeaderContextMenu: function (e, field) {
+			e.preventDefault();
+			if (!cmenu) {
+				createColumnMenu("IdProyecto");
+			}
+			cmenu.menu('show', {
+				left: e.pageX,
+				top: e.pageY
+			});
+		},
+		onLoadSuccess: function (data) {
+			if (lIndexSelected >= 0) {
+				var lsw = false;
+				var rows = $(this).datagrid('getRows');
+				for (var i = 0; i < rows.length; i++) {
+					if (rows[i].Id == lIdSelected) {
+						lsw = true;
+						break;
+					}
+				}
+				if (lsw == false) {
+					$('#dgFicheros').datagrid('clearSelections');
+				}
+			}
+			$('#dgFicheros').datagrid('resize');
+			$('#dgFicheros').datagrid('fixColumnSize');
+			ActualizarBotonesFicheros();
+		},
+		onClickRow: function (index) {
+			ActualizarBotonesFicheros();
+		}
+	});
+	var Paginacion = $('#dgFicheros').datagrid('getPager');
+	Paginacion.pagination({
+		showPageList: false,
+		buttons: [{
+			id: 'btnAñadirFichero',
+			iconCls: 'icon-add',
+			text: 'Añadir fichero',
+			disabled: false,
+			handler: function () {
+				OpenAddFile();
+			}
+		},{
+			id: 'btnBorrarFichero',
+			iconCls: 'icon-cancel',
+			text: 'Eliminar fichero',
+			disabled: true,
+			handler: function () {
+				DeleteFile();
+			}
+		}]
+	});  
+}
+
+function ActualizarBotonesFicheros() {
+	var lItem = $('#dgFicheros').datagrid('getSelected');
+	if (lItem != null) {
+		$('#btnBorrarFichero').linkbutton('enable');
+	} else {
+		$('#btnBorrarFichero').linkbutton('disable');
+	}
+}
+function OpenAddFile() {
+	//Muestro el dialogo
+	$('#dlgAddFile').dialog( {href:'<?php echo(obtenURLController("ProyectoArchivo", "crear")); ?>/?IdProyecto=<?php echo $Model->Id; ?>' });
+	$('#dlgAddFile').dialog('open');
+}
+
+function CerrarFile() {
+	$('#dlgAddFile').dialog('close');
+	$('#dgFicheros').datagrid('reload');
+}
+
+function DeleteFile() {
+	//LLamar por Ajax al delete
+	var lItem = $('#dgFicheros').datagrid('getSelected');
+	if (lItem != null) {
+		$.ajax({
+			type: "POST",
+			url: '<?php echo(obtenURLController("ProyectoArchivo", "eliminarid")); ?>&id=' + lItem.Id,
+			data: <?php echo json_encode(obtenerJSAntiCSRF()); ?>,
+		}).done(function (msg) {
+			if(msg){
+				resultObj = eval(msg);
+				if(resultObj["Estado"] == 1 ) {
+					// Si todo es correcto, eliminar del grid y refrescar
+					$('#dgFicheros').datagrid('reload');
+				}else {
+					$.messager.alert('DAW', resultObj["Error"], 'error'); 
+				}
+			}else{
+				$.messager.alert('DAW', "Error", 'error'); 
+			}				
+		});
+	}
+}
 
 </script>

@@ -40,6 +40,11 @@ function obtenURLRaiz()
 }
 // Funciones para montar URL
 
+function checkCarpeta($asCarpeta){
+	if (!file_exists($asCarpeta)) {
+		mkdir($asCarpeta, 0777, true);
+	}
+}
 
 // Funciones para el tratamiento de texto
 function ClearEvents($asTexto)

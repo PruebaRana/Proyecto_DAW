@@ -2,27 +2,29 @@
 //Incluimos algunas clases:
 $lsRuta = str_replace("web\ObtenArchivo.php", "", $_SERVER["SCRIPT_FILENAME"]);
 
-require_once $lsRuta."web/"."libs/Config.php"; 		//de configuracion
-require_once $lsRuta."web/".'libs/ConexionDB.php'; 	//Acceso a BD por PDO con singleton
-require_once $lsRuta."web/".'libs/Utiles.php'; 		//
+require_once $lsRuta."app/libs/Config.php"; 		//de configuracion
+require_once $lsRuta."app/libs/ConexionDB.php"; 	//Acceso a BD por PDO con singleton
+require_once $lsRuta."app/libs/Utiles.php"; 		//
 
-require_once $lsRuta."web/".'config.php'; 				//Archivo con configuraciones.
+require_once $lsRuta."app/config.php"; 				//Archivo con configuraciones.
 
 // Iniciamos la sesion
-require_once $lsRuta."web/".'models/SessionModel.php';
+require_once $lsRuta."app/models/SessionModel.php";
 session_start();
 $_SESSION = unserialize(serialize($_SESSION));
 global $usuario;
 $usuario = obtenParametroArray($_SESSION, "user", new SesionModel());
 $IdUsuario = $usuario->Id;
 
-// Obtenemos todos los parametros necesarios
-$lsROOT = __DIR__ ."/Contenidos/";
-$IdUser = $_GET['IdUser'];
-$File = $_GET['File'];
-$FicheroFinal = $lsROOT.$IdUser."/".$File;
-$NombreFichero = basename($FicheroFinal);
 
+// Obtenemos todos los parametros necesarios
+$lsRutaProyectos = $lsRuta.'app/contenidos/proyectos/';
+$IdProyecto = $_GET['IdProyecto'];
+$File = $_GET['File'];
+
+$FicheroFinal = $lsRutaProyectos.$IdProyecto."/".$File;
+$NombreFichero = basename($FicheroFinal);
+$NombreFichero = substr($NombreFichero, 5);
 // Comprobaciones
 // 1 - Esta logueado
 EstaLogueado();

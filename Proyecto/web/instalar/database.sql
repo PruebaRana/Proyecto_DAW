@@ -185,7 +185,7 @@ CREATE TABLE `proyectosarchivos` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `IdProyecto` int(11) unsigned NOT NULL,
   `tipo` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
-  `ruta` varchar(45) COLLATE utf8_spanish2_ci NOT NULL,
+  `ruta` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

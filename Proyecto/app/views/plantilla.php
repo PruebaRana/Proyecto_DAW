@@ -35,7 +35,7 @@
 		
 		<footer id="pie"><?php include($config->get('Ruta')."app/includes/_pie.php"); ?></footer>
 
-		<script src="<?php echo $config->get('URL'); ?>/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+		<script src="<?php echo $config->get('URL'); ?>/js/jquery-2.2.4.min.js" type="text/javascript"></script>
 		<script src="<?php echo $config->get('URL'); ?>/js/EasyUI/jquery.easyui.min.js" type="text/javascript"></script>
 		<script src="<?php echo $config->get('URL'); ?>/js/EasyUI/locale/easyui-lang-es.js" type="text/javascript"></script>
 		<script src="<?php echo $config->get('URL'); ?>/js/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>

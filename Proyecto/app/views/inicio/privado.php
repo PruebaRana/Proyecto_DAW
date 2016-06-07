@@ -60,7 +60,18 @@
   echo "<pre>";
   print_r($_SERVER);
   echo "</pre>";	
-	
+
+  echo "<br><br><br><br><br><br><br><br><br><br><br><br><br>";
+  echo "POST";
+  echo "<pre>";
+  print_r($_POST);
+  echo "</pre>";	  
+
+  echo "<br><br><br><br><br><br><br><br><br><br><br><br><br>";
+  echo "GET";
+  echo "<pre>";
+  print_r($_GET);
+  echo "</pre>";	  
 ?>
 
 <br>

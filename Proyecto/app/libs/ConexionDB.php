@@ -1289,7 +1289,234 @@ die;
 	}
 	// BLOQUE Proyectos
 
+	// BLOQUE ProyectosArchivos
+	public function ProyectosArchivosObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
+	{
+		$lList = array();
+		$_PreparePDO = null;
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			$lsSort = " ORDER BY ";
+			$lsLimit = $this->ObtenLimit($aiPaginaActual, $aiItemsPorPagina);
+			
+			$validColumns = array( "id", "idproyecto", "tipo", "ruta" );
+			if(in_array(strtolower($asCampoOrdenacion), $validColumns))
+			{
+				$lsSort .= $asCampoOrdenacion;
+			}
+			else
+			{
+				$lsSort .= "id";
+			}
+			$lsSort .= $this->ObtenOrder($asTipoOrdenacion);
+			
+			// Ojo, tenemos que procesar el asWhere para obtener un array de valores
+			// y asi usar la parametrizacion de PDO
+			$lsSQL = "SELECT Id, IdProyecto, Tipo, Ruta FROM ProyectosArchivos";
+			if (Count($asWhere) > 0)
+			{
+				$lsSQL .= " WHERE ".$asWhere->Where;
+				$_PreparePDO = $asWhere->ArrayWhere;
+			}
+			$lsSQL .= $lsSort.$lsLimit.";";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute($_PreparePDO);
+		
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new ProyectoArchivoModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->IdProyecto = sanitizar(obtenParametroArray($valor, "idproyecto"));
+					$Item->Tipo = sanitizar(obtenParametroArray($valor, "tipo"));
+					$Item->Ruta = sanitizar(obtenParametroArray($valor, "ruta"));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
 
+		return $lList;
+	}
+
+	public function ProyectosArchivosCount($asWhere = array())
+	{
+		$liId = -1;
+		$_PreparePDO = null;
+		// Preparamos la SQL
+		$lsSQL = "Select Count(1) as Cantidad FROM ProyectosArchivos";
+		if (Count($asWhere) > 0)
+		{
+			$lsSQL .= " WHERE ".$asWhere->Where;
+			$_PreparePDO = $asWhere->ArrayWhere;
+		}
+		$lsSQL .= "";
+		// Obtenemos el resultado del count
+		$result = $this->prepare($lsSQL);
+		$result->execute($_PreparePDO);
+		$cuenta = $result->rowCount();
+		if ($result && $result->rowCount()>0) {
+			$row = $result->fetch();
+			$liId = obtenParametroArray($row, "Cantidad");
+		}
+		return $liId;
+	}
+
+	public function ProyectosArchivosItem($aiId)
+	{
+		$Item = null;
+		// Montamos el WherePDO para obtener este Id
+		$lWherePDO = new WherePDO();
+		$lWherePDO->Where = "id=:id";
+		$lWherePDO->ArrayWhere = array(":id" => $aiId);
+		
+		$lResultados = $this->ProyectosArchivosObtenerPagina($lWherePDO);
+		if($lResultados != null && Count($lResultados) > 0)
+		{
+			$Item = $lResultados[0];
+		}
+
+		return $Item;
+	}
+
+	public function ProyectosArchivosAñadir($aItem = null)
+	{
+		$liRes = 0;
+		if($aItem != null)
+		{
+			$lsSQL = "INSERT INTO ProyectosArchivos (IdProyecto, Tipo, Ruta)";
+			$lsSQL .= " VALUES (:IdProyecto, :Tipo, :Ruta);";
+			$lArray = array(":IdProyecto" => $aItem->IdProyecto, ":Tipo" => $aItem->Tipo, ":Ruta" => $aItem->Ruta);
+
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+
+	public function ProyectosArchivosEliminar($aiId = 0)
+	{
+		$liRes = 0;
+		if($aiId > 0)
+		{
+			$lsSQL = "DELETE FROM ProyectosArchivos WHERE ID=:Id ";
+			$lArray = array(":Id" => $aiId);
+			$result = $this->prepare($lsSQL);
+			$result->execute($lArray);
+			
+			$liRes = $result->rowCount();
+		}
+		return $liRes;
+	}
+	
+	// BLOQUE ProyectosArchivos
+
+	// BLOQUE ProyectosArchivosTipos
+	public function ProyectosArchivosTiposObtenerPagina($asWhere = array(), $aiPaginaActual = 1, $aiItemsPorPagina = 10, $asCampoOrdenacion = "", $asTipoOrdenacion = "")
+	{
+		$lList = array();
+		$_PreparePDO = null;
+		$lsSQL = "";
+		try
+		{
+			//Comprobaciones
+			$lsSort = " ORDER BY ";
+			$lsLimit = $this->ObtenLimit($aiPaginaActual, $aiItemsPorPagina);
+			
+			$validColumns = array( "nombre" );
+			if(in_array(strtolower($asCampoOrdenacion), $validColumns))
+			{
+				$lsSort .= $asCampoOrdenacion;
+			}
+			else
+			{
+				$lsSort .= "Nombre";
+			}
+			$lsSort .= $this->ObtenOrder($asTipoOrdenacion);
+			
+			// Ojo, tenemos que procesar el asWhere para obtener un array de valores
+			// y asi usar la parametrizacion de PDO
+			$lsSQL = "SELECT Id, Nombre FROM ProyectosArchivosTipos";
+			if (Count($asWhere) > 0)
+			{
+				$lsSQL .= " WHERE ".$asWhere->Where;
+				$_PreparePDO = $asWhere->ArrayWhere;
+			}
+			$lsSQL .= $lsSort.$lsLimit.";";
+			$lsSQL = strtolower($lsSQL);
+			$result = $this->prepare($lsSQL);
+			$result->execute($_PreparePDO);
+		
+			$cuenta = $result->rowCount();
+			if ($result && $cuenta>0) {
+				foreach ($result as $valor) {
+					$Item = new ProyectoArchivoTipoModel();
+					$Item->Id = sanitizar(obtenParametroArray($valor, "id"));
+					$Item->Nombre = sanitizar(obtenParametroArray($valor, "nombre"));
+					$lList[] = $Item;
+				}
+			}
+		}
+		catch (Exception $ex)
+		{
+			$message = $ex->getCode()."->".$ex->getMessage()." en ".$ex->getFile().":".$ex->getLine()." Traza [".$ex->getTraceAsString()."]";
+			print("Provocado error: ".$message);
+		}
+
+		return $lList;
+	}
+
+	public function ProyectosArchivosTiposCount($asWhere = array())
+	{
+		$liId = -1;
+		$_PreparePDO = null;
+		// Preparamos la SQL
+		$lsSQL = "Select Count(1) as Cantidad FROM ProyectosArchivosTipos";
+		if (Count($asWhere) > 0)
+		{
+			$lsSQL .= " WHERE ".$asWhere->Where;
+			$_PreparePDO = $asWhere->ArrayWhere;
+		}
+		$lsSQL .= "";
+		// Obtenemos el resultado del count
+		$result = $this->prepare($lsSQL);
+		$result->execute($_PreparePDO);
+		$cuenta = $result->rowCount();
+		if ($result && $result->rowCount()>0) {
+			$row = $result->fetch();
+			$liId = obtenParametroArray($row, "Cantidad");
+		}
+		return $liId;
+	}
+
+	public function ProyectosArchivosTiposItem($aiId)
+	{
+		$Item = null;
+		// Montamos el WherePDO para obtener este Id
+		$lWherePDO = new WherePDO();
+		$lWherePDO->Where = "id=:id";
+		$lWherePDO->ArrayWhere = array(":id" => $aiId);
+		
+		$lResultados = $this->ProyectosArchivosTiposObtenerPagina($lWherePDO);
+		if($lResultados != null && Count($lResultados) > 0)
+		{
+			$Item = $lResultados[0];
+		}
+
+		return $Item;
+	}
+	// BLOQUE ProyectosArchivosTipos
+
+	
 	// BLOQUE PlantillaCorreo
 	public function PlantillaCorreoObtenerPlantilla($asPlantilla = "")
 	{
@@ -1328,6 +1555,7 @@ die;
 	}
 	// BLOQUE PlantillaCorreo
 
+	
 	
 	// usados por la propia clase para obtener el order y el limit en las select
 	private function ObtenOrder($asOrder = "")
