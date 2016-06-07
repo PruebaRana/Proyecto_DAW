@@ -44,6 +44,11 @@ class InicioController extends ControllerBase
         $this->view->show($this->_Nombre."/privado.php", $data);
     }
 
+    public function privado2()
+    {
+		header("Location:".obtenURLController("Inicio", "privado"));
+
+    }
 
 }
 ?>

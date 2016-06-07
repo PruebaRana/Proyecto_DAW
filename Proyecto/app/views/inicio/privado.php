@@ -49,7 +49,8 @@
   echo "2<pre>".$lr2."</pre><br>";
 	
 	
-  $ll = sanitizar($_GET["esto"], true);
+  $ll = "REFERRER=".sanitizar($_SERVER["HTTP_REFERER"]).".".getenv('HTTP_REFERER').".";
+  
   
   echo $ll;
   echo var_dump($ll);
