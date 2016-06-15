@@ -12,14 +12,14 @@ $config->set('viewsFolder', 'app/views/');
 
 // Datos de acceso a la BD 
 $config->set('dbhost', 'localhost:3305');
-$config->set('dbname', 'proyecto_daw');
-$config->set('dbuser', 'proyecto_daw');
-$config->set('dbpass', '.Proyecto_Daw.13');
+$config->set('dbname', 'name');
+$config->set('dbuser', 'user');
+$config->set('dbpass', 'pass');
 
 // Datos de Configuracion del correo
-$config->set('CorreoHost', "mail.pymsolutions.com");
-$config->set('CorreoUser', "servicios@pymsolutions.com");
-$config->set('CorreoPass', "jaimeservicios33");
+$config->set('CorreoHost', "host.com");
+$config->set('CorreoUser', "cuenta");
+$config->set('CorreoPass', "contraseña");
 
 // Para que el sistema monte URL amigables, se tiene que configurar el servidor web para que las procese.
 $config->set('urlFriendly', true);
